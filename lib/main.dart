@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:insight_app/screens/home_page.dart';
+import 'package:insight_app/theme/colors/light_colors.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: LightColors.kDarkBlue,
+              displayColor: LightColors.kDarkBlue,
+              fontFamily: 'Poppins',
+            ),
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              color: LightColors.kDarkYellow,
+            ),
+      ),
+      home: const HomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
