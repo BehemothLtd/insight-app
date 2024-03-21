@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:insight_app/constanst.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/widgets/top_container.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:insight_app/widgets/uis/top_container.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -37,10 +36,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          systemNavigationBarColor: LightColors.kLightYellow,
-          statusBarColor: LightColors.kLightYellow,
-        ),
+        systemOverlayStyle: SYSTEM_UI_STYLE,
         toolbarHeight: 0,
       ),
       backgroundColor: LightColors.kLightYellow,
