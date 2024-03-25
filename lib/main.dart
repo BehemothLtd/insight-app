@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:insight_app/controllers/auth_controller.dart';
-import 'package:insight_app/screens/home_page.dart';
-import 'package:insight_app/screens/sign_in_page.dart';
-import 'package:insight_app/theme/colors/light_colors.dart';
 
-void main() {
+import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:insight_app/routes/app_pages.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
+
+void main() async {
+  await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
 
@@ -17,21 +21,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static final AuthController authController = Get.put(AuthController());
-
-  // var initWidget = Obx(
-  //   () => authController.token.value != null
-  //       ? const HomePage()
-  //       : const SignInPage(),
-  // );
-
-  var initWidget = authController.token.value != null
-      ? const HomePage()
-      : const SignInPage();
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -44,8 +36,9 @@ class _MyAppState extends State<MyApp> {
               color: LightColors.kDarkYellow,
             ),
       ),
-      home: initWidget,
       debugShowCheckedModeBanner: false,
+      initialRoute: AppPages.initialRoute,
+      getPages: AppPages.routes,
     );
   }
 }

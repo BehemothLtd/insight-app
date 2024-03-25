@@ -5,7 +5,6 @@ import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/auth/auth_input_field.dart';
 import 'package:insight_app/widgets/uis/primary_button.dart';
-import 'package:insight_app/widgets/uis/top_container.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
