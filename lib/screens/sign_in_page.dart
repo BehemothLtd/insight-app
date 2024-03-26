@@ -4,6 +4,7 @@ import 'package:insight_app/constanst.dart';
 import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/auth/auth_input_field.dart';
+import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/uis/primary_button.dart';
 
 class SignInPage extends StatefulWidget {
@@ -38,32 +39,38 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              AuthInputField(
-                label: "Email Address",
-                obscureText: false,
-                controller: emailController,
-                textColor: Colors.black,
-                fontSize: 14,
-                hintText: "user@behemoth.vn",
-                onChanged: (String value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
+              FormValidator(
+                errorKey: "email",
+                child: AuthInputField(
+                  label: "Email Address",
+                  obscureText: false,
+                  controller: emailController,
+                  textColor: Colors.black,
+                  fontSize: 14,
+                  hintText: "user@behemoth.vn",
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
               ),
-              AuthInputField(
-                label: "Password",
-                obscureText: true,
-                controller: passwordController,
-                textColor: Colors.black,
-                fontSize: 14,
-                hintText: "* * * * * *",
-                padding: const EdgeInsets.only(bottom: 8),
-                onChanged: (String value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
+              FormValidator(
+                errorKey: "password",
+                child: AuthInputField(
+                  label: "Password",
+                  obscureText: true,
+                  controller: passwordController,
+                  textColor: Colors.black,
+                  fontSize: 14,
+                  hintText: "* * * * * *",
+                  padding: const EdgeInsets.only(bottom: 8),
+                  onChanged: (String value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                ),
               ),
               PrimaryButton(
                 buttonText: "Login",

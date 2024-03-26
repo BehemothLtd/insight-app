@@ -7,6 +7,7 @@ import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:insight_app/controllers/auth_controller.dart";
 import "package:insight_app/controllers/global_controller.dart";
 import "package:insight_app/utils/custom_snackbar.dart";
+import "package:insight_app/utils/helpers.dart";
 
 class ApiProvider extends GetxController {
   Future<dynamic> request({
@@ -14,7 +15,7 @@ class ApiProvider extends GetxController {
     required dynamic variables,
     bool signInRequired = true,
   }) async {
-    final AuthController authController = Get.find<AuthController>();
+    final AuthController authController = Get.put(AuthController());
     final GlobalController globalController = Get.put(GlobalController());
 
     Uri url = Uri.parse('${dotenv.env["API_BASE_URL"]}/insightGql');
@@ -48,13 +49,14 @@ class ApiProvider extends GetxController {
         if (errors != null && errors.length > 0) {
           // Error handler
           var errorCode = errors[0]['extensions']['code'];
-          var errorDetails = errors[0]['extensions']['errors'];
+          Map<String, List<String>> errorDetails =
+              convertToSafeMap(errors[0]['extensions']['errors']);
 
           if (errorCode == 422) {
             globalController.setErrors(errorDetails);
 
             showCustomSnackbar(
-              message: globalController.errors['base'][0],
+              message: "Error Happened",
               title: 'Warning',
               backgroundColor: Colors.blue,
               iconData: Icons.warning,
