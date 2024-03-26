@@ -5,7 +5,6 @@ class GlobalController extends GetxController {
   var errors = <String, List<String>>{}.obs;
 
   void setErrors(Map<String, List<String>> value) {
-    print(value);
     // Use .value to correctly update the observable's value.
     errors.value = value;
   }
