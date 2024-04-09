@@ -1,5 +1,10 @@
+// Outer Libs
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+// Inner packages
 import 'package:insight_app/constanst.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/uis/top_container.dart';
 
@@ -34,6 +39,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
+    final AuthController authController = Get.put(AuthController());
+    final currentUser = authController.currentUser.value;
+
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SYSTEM_UI_STYLE,
@@ -46,10 +54,10 @@ class HomePage extends StatelessWidget {
             TopContainer(
               height: 200,
               width: width,
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Icon(Icons.menu,
@@ -59,7 +67,8 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 0, vertical: 0.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -67,26 +76,43 @@ class HomePage extends StatelessWidget {
                         CircleAvatar(
                           backgroundColor: LightColors.kBlue,
                           radius: 35.0,
-                          backgroundImage: AssetImage(
-                            'assets/images/avatar.png',
+                          child: ClipOval(
+                            child: FadeInImage.assetNetwork(
+                              placeholder:
+                                  'assets/images/placeholder-avatar.png', // Local asset placeholder
+                              image: currentUser?.avatarUrl ?? '',
+                              fit: BoxFit.cover,
+                              width: 70.0,
+                              height: 70.0,
+                              fadeInDuration: const Duration(milliseconds: 200),
+                              fadeOutDuration:
+                                  const Duration(milliseconds: 100),
+                              placeholderErrorBuilder:
+                                  (context, error, stackTrace) {
+                                return Image.asset('assets/images/avatar.png');
+                              },
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset('assets/images/avatar.png');
+                              },
+                            ),
                           ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              'Sourav Suman',
+                              currentUser?.fullName ?? '',
                               textAlign: TextAlign.start,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 22.0,
                                 color: LightColors.kDarkBlue,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
-                              'App Developer',
+                              currentUser?.email ?? '',
                               textAlign: TextAlign.start,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black45,
                                 fontWeight: FontWeight.w400,

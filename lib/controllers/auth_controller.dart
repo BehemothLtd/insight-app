@@ -6,8 +6,11 @@ import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/routes/app_pages.dart';
 import 'package:insight_app/utils/api.dart';
 
+import 'package:insight_app/models/user.dart';
+
 class AuthController extends GetxController {
   var token = Rxn<String>();
+  var currentUser = Rxn<User>();
 
   ApiProvider apiProvider = Get.put(ApiProvider());
 
@@ -17,8 +20,13 @@ class AuthController extends GetxController {
     token.value = value;
   }
 
+  setCurrentUser(user) {
+    currentUser.value = user;
+  }
+
   signIn(String email, String password) async {
-    const signInMutation = gql.signInMutation;
+    const signInMutation = gql.signInGQL;
+
     var variables = {
       "email": email,
       "password": password,
@@ -29,6 +37,15 @@ class AuthController extends GetxController {
 
     if (result != null) {
       setToken(result['SignIn']['token']);
+
+      User? user;
+      // Get User Info
+      user = await User.fetchSelfGeneralInfo();
+
+      if (user != null) {
+        setCurrentUser(user);
+      }
+
       Get.close(1);
       Get.toNamed(Routes.home);
     }

@@ -1,5 +1,8 @@
+// Outer libs
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+// Inner packages
 import 'package:insight_app/controllers/global_controller.dart';
 
 class FormValidator extends StatelessWidget {

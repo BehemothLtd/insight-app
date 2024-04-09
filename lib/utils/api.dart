@@ -41,8 +41,8 @@ class ApiProvider extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        var decodedResponse =
-            json.decode(response.body) as Map<String, dynamic>;
+        var decodedResponse = json.decode(utf8.decode(response.bodyBytes))
+            as Map<String, dynamic>;
 
         var errors = decodedResponse['errors'];
 
