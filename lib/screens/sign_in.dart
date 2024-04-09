@@ -55,7 +55,7 @@ class _SignInPageState extends State<SignInPage> {
                         children: <Widget>[
                           const Spacer(flex: 2),
                           SvgPicture.asset(
-                            'assets/images/behemoth-logo.svg', // Your logo here
+                            'assets/images/behemoth-logo.svg',
                             width: MediaQuery.of(context).size.width *
                                 0.5, // Logo is 50% of screen width
                           ),

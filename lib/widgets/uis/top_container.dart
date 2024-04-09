@@ -20,11 +20,12 @@ class TopContainer extends StatelessWidget {
     return Container(
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 20.0),
       decoration: const BoxDecoration(
-          color: LightColors.kDarkYellow,
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(40.0),
-            bottomLeft: Radius.circular(40.0),
-          )),
+        color: LightColors.kDarkYellow,
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(40.0),
+          bottomLeft: Radius.circular(40.0),
+        ),
+      ),
       height: height,
       width: width,
       child: child,
