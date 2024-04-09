@@ -6,6 +6,7 @@ class PrimaryButton extends StatelessWidget {
   final String buttonText;
   final String? svgPath;
   final bool disabled;
+  final Color? buttonColor;
 
   const PrimaryButton({
     super.key,
@@ -13,6 +14,7 @@ class PrimaryButton extends StatelessWidget {
     required this.buttonText,
     this.svgPath,
     this.disabled = false,
+    this.buttonColor,
   });
 
   @override
@@ -35,12 +37,7 @@ class PrimaryButton extends StatelessWidget {
           width: size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
-            gradient: const LinearGradient(
-              colors: [
-                Color(0XFF38B1A6),
-                Color(0XFF434C9D),
-              ],
-            ),
+            color: buttonColor ?? const Color(0XFF434C9D),
           ),
           padding: const EdgeInsets.all(0),
           child: Row(
