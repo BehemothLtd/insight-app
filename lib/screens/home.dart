@@ -44,7 +44,6 @@ class HomePage extends StatelessWidget {
             HomePageTopContainer(
               width: width,
               currentUser: currentUser,
-              onMenuTap: () => Scaffold.of(context).openDrawer(),
             ),
             const AttendanceBox(),
           ],

@@ -10,12 +10,10 @@ class HomePageTopContainer extends StatelessWidget {
     super.key,
     required this.width,
     required this.currentUser,
-    required this.onMenuTap,
   });
 
   final double width;
   final User? currentUser;
-  final VoidCallback onMenuTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +29,16 @@ class HomePageTopContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                  onPressed: onMenuTap,
-                  icon: const Icon(
-                    Icons.menu,
-                    color: LightColors.kDarkBlue,
-                    size: 30.0,
-                  ),
-                ),
+                Builder(builder: (context) {
+                  return IconButton(
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: const Icon(
+                      Icons.menu,
+                      color: LightColors.kDarkBlue,
+                      size: 30.0,
+                    ),
+                  );
+                }),
                 CircleAvatar(
                   backgroundColor: LightColors.kBlue,
                   radius: 35.0,
