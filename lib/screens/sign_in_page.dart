@@ -55,6 +55,9 @@ class _SignInPageState extends State<SignInPage> {
                   },
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               FormValidator(
                 errorKey: "password",
                 child: AuthInputField(
@@ -64,7 +67,6 @@ class _SignInPageState extends State<SignInPage> {
                   textColor: Colors.black,
                   fontSize: 14,
                   hintText: "* * * * * *",
-                  padding: const EdgeInsets.only(bottom: 8),
                   onChanged: (String value) {
                     setState(() {
                       password = value;

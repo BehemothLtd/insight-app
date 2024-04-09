@@ -18,9 +18,6 @@ class AuthController extends GetxController {
   }
 
   signIn(String email, String password) async {
-    print(email);
-    print(password);
-
     const signInMutation = gql.signInMutation;
     var variables = {
       "email": email,

@@ -5,7 +5,6 @@ import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:insight_app/routes/app_pages.dart';
-import 'package:insight_app/controllers/auth_controller.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");

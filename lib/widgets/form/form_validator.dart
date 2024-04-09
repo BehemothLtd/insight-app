@@ -4,14 +4,12 @@ import 'package:insight_app/controllers/global_controller.dart';
 
 class FormValidator extends StatelessWidget {
   final Widget child;
-  final EdgeInsets padding;
   final String errorKey;
 
   const FormValidator({
     super.key,
     required this.child,
     required this.errorKey,
-    this.padding = const EdgeInsets.all(8.0),
   });
 
   @override
@@ -19,29 +17,30 @@ class FormValidator extends StatelessWidget {
     final GlobalController globalController = Get.put(GlobalController());
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: padding,
-          child: child,
-        ),
+        child, // Directly include the child without padding
         Obx(() {
           var fieldErrors = globalController.errors[errorKey];
-          // Ensure fieldErrors is not null and has elements before building the ListView
           if (fieldErrors != null && fieldErrors.isNotEmpty) {
-            return ListView.builder(
-              shrinkWrap: true, // Add shrinkWrap to true for nested ListViews
-              physics:
-                  const NeverScrollableScrollPhysics(), // Disable scrolling within the ListView
-              itemCount: fieldErrors.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(fieldErrors[index]),
-                );
-              },
+            // Use a Column to display all error messages
+            return Padding(
+              padding: const EdgeInsets.only(top: 5), // Set padding to 5px
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: fieldErrors
+                    .map((error) => Text(
+                          error,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ))
+                    .toList(),
+              ),
             );
           } else {
-            return const SizedBox
-                .shrink(); // Return an empty widget when there are no errors
+            return const SizedBox.shrink(); // No errors, don't display anything
           }
         }),
       ],
