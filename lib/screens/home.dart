@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 // Inner packages
 import 'package:insight_app/constanst.dart';
 import 'package:insight_app/controllers/auth_controller.dart';
-
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/home/attendance_box.dart';
 import 'package:insight_app/widgets/home/top_container.dart';
+import 'package:insight_app/widgets/uis/side_drawer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,11 +44,13 @@ class HomePage extends StatelessWidget {
             HomePageTopContainer(
               width: width,
               currentUser: currentUser,
+              onMenuTap: () => Scaffold.of(context).openDrawer(),
             ),
             const AttendanceBox(),
           ],
         ),
       ),
+      drawer: const SideDrawer(),
     );
   }
 }

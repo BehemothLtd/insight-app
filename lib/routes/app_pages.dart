@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import 'package:insight_app/screens/home_page.dart';
-import 'package:insight_app/screens/sign_in_page.dart';
+import 'package:insight_app/screens/home.dart';
+import 'package:insight_app/screens/sign_in.dart';
 
 part 'app_routes.dart';
 
