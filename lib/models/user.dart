@@ -36,7 +36,7 @@ class User {
 
   static fetchSelfGeneralInfo() async {
     const query = gql.selfGeneralInfoGQL;
-    ApiProvider apiProvider = Get.put(ApiProvider());
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     User? user;
 
@@ -53,7 +53,7 @@ class User {
 
   static signIn(String email, String password) async {
     const query = gql.signInGQL;
-    ApiProvider apiProvider = Get.put(ApiProvider());
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var result = await apiProvider.request(query: query, variables: {
       "email": email,

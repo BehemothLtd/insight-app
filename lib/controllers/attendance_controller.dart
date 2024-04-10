@@ -44,4 +44,8 @@ class AttendanceController extends GetxController {
 
     return null;
   }
+
+  attend() async {
+    await Attendance.attend();
+  }
 }

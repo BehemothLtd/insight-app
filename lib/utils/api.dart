@@ -15,7 +15,7 @@ class ApiProvider extends GetxController {
     required dynamic variables,
     bool signInRequired = true,
   }) async {
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     final GlobalController globalController = Get.put(GlobalController());
 
     Uri url = Uri.parse('${dotenv.env["API_BASE_URL"]}/insightGql');

@@ -12,7 +12,7 @@ class AuthController extends GetxController {
   var token = Rxn<String>();
   var currentUser = Rxn<User>();
 
-  ApiProvider apiProvider = Get.put(ApiProvider());
+  ApiProvider apiProvider = Get.find<ApiProvider>();
 
   bool get signedIn => token.value != null;
 

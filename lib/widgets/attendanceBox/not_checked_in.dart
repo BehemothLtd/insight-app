@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insight_app/controllers/attendance_controller.dart';
 
 class NotCheckedIn extends StatelessWidget {
   const NotCheckedIn({
@@ -7,6 +9,8 @@ class NotCheckedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final attendanceController = Get.put(AttendanceController());
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -23,7 +27,7 @@ class NotCheckedIn extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
-              // Handle check-in action
+              attendanceController.attend();
             },
             icon: const Icon(
               Icons.login,

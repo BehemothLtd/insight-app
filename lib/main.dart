@@ -3,13 +3,18 @@ import 'package:get/get.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/routes/app_pages.dart';
+import 'package:insight_app/utils/api.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
+  Get.put(ApiProvider());
+  Get.put(AuthController());
+
+  print("INITTED");
 }
 
 class MyApp extends StatefulWidget {

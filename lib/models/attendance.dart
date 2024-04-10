@@ -28,7 +28,7 @@ class Attendance {
   static fetchSelfAttendances() async {
     const query = gql.selfAttendancesGQL;
 
-    ApiProvider apiProvider = Get.put(ApiProvider());
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var result = await apiProvider
         .request(query: query, variables: {}); // TODO: add variables
@@ -48,5 +48,16 @@ class Attendance {
       };
     }
     return null;
+  }
+
+  static attend() async {
+    const query = gql.selfAttendGQL;
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    var result = await apiProvider.request(query: query, variables: {});
+
+    if (result != null) {
+      print(result);
+    }
   }
 }

@@ -11,8 +11,6 @@ import 'package:insight_app/widgets/uis/primary_button.dart';
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
-  static final authController = Get.put(AuthController());
-
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
@@ -24,7 +22,7 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  static final AuthController authController = Get.put(AuthController());
+  static final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
