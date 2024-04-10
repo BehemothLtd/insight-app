@@ -9,7 +9,6 @@ import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/home/attendance_box.dart';
 import 'package:insight_app/widgets/home/top_container.dart';
 import 'package:insight_app/widgets/home/user_general_metrics.dart';
-import 'package:insight_app/widgets/uis/info_card.dart';
 import 'package:insight_app/widgets/uis/side_drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -54,7 +53,9 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      drawer: const SideDrawer(),
+      drawer: SideDrawer(
+        currentUser: currentUser,
+      ),
     );
   }
 }

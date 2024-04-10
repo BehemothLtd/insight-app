@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:insight_app/widgets/uis/top_container.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/widgets/user/circle_avatar.dart';
 
 class HomePageTopContainer extends StatelessWidget {
   const HomePageTopContainer({
@@ -39,31 +40,12 @@ class HomePageTopContainer extends StatelessWidget {
                     ),
                   );
                 }),
-                CircleAvatar(
-                  backgroundColor: LightColors.kBlue,
-                  radius: 35.0,
-                  child: ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/placeholder-avatar.png',
-                      image: currentUser?.avatarUrl ?? '',
-                      fit: BoxFit.cover,
-                      width: 70.0,
-                      height: 70.0,
-                      fadeInDuration: const Duration(milliseconds: 200),
-                      fadeOutDuration: const Duration(milliseconds: 100),
-                      placeholderErrorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/images/avatar.png');
-                      },
-                      imageErrorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/images/avatar.png');
-                      },
-                    ),
-                  ),
-                ),
+                UserCircleAvatar(currentUser: currentUser),
               ],
             ),
             const SizedBox(
-                height: 20), // Provide space between the row and the text
+              height: 20,
+            ), // Provide space between the row and the text
             Text(
               currentUser?.fullName ?? '',
               style: GoogleFonts.lato(
