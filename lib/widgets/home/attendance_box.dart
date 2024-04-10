@@ -75,17 +75,6 @@ class AttendanceBox extends StatelessWidget {
                               attendance: attendanceController
                                   .selfAttendanceToday.value,
                             ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  // Handle "show more" action
-                                },
-                                child: const Text('Show more'),
-                              ),
-                            ],
-                          ),
                         ],
                       );
                     },
