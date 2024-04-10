@@ -13,8 +13,6 @@ void main() async {
   runApp(const MyApp());
   Get.put(ApiProvider());
   Get.put(AuthController());
-
-  print("INITTED");
 }
 
 class MyApp extends StatefulWidget {

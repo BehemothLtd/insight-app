@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:insight_app/models/attendance.dart';
+import 'package:insight_app/utils/custom_snackbar.dart';
 
 class AttendanceController extends GetxController {
   var selfAttendances = Rxn<List<Attendance>>();
@@ -31,13 +33,12 @@ class AttendanceController extends GetxController {
 
     if (attendances != null) {
       for (Attendance attendance in attendances) {
-        if (attendance.checkinAt != null) {
-          DateTime checkInDate = attendance.checkinAt!;
-          if (checkInDate.year == today.year &&
-              checkInDate.month == today.month &&
-              checkInDate.day == today.day) {
-            selfAttendanceToday(attendance);
-          }
+        DateTime checkInDate = attendance.checkinAt;
+
+        if (checkInDate.year == today.year &&
+            checkInDate.month == today.month &&
+            checkInDate.day == today.day) {
+          selfAttendanceToday(attendance);
         }
       }
     }
@@ -46,6 +47,18 @@ class AttendanceController extends GetxController {
   }
 
   attend() async {
-    await Attendance.attend();
+    var result = await Attendance.attend();
+
+    if (result) {
+      showCustomSnackbar(
+        message: "Checked In",
+        title: 'Success',
+        backgroundColor: Colors.blue,
+        iconData: Icons.check,
+      );
+
+      await fetchSelfAttendances();
+      checkAttendanceToday();
+    }
   }
 }

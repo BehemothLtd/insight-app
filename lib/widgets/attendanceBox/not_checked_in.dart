@@ -27,7 +27,46 @@ class NotCheckedIn extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
-              attendanceController.attend();
+              // attendanceController.attend();
+              // Show the dialog here
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Row(
+                      children: [
+                        Icon(
+                          Icons.login,
+                          color: Colors.green,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Check In',
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                    content: const Text('Are you sure you want to check in?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context)
+                            .pop(), // Dismiss the dialog but do nothing
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Dismiss the dialog and perform the check-in action
+                          Navigator.of(context).pop();
+                          attendanceController.attend();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(
               Icons.login,

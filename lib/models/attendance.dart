@@ -4,20 +4,19 @@ import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
 
 class Attendance {
-  DateTime? checkinAt;
+  DateTime checkinAt;
   DateTime? checkoutAt;
   DateTime createdAt;
 
   Attendance({
-    this.checkinAt,
+    required this.checkinAt,
     this.checkoutAt,
     required this.createdAt,
   });
 
   factory Attendance.fromJson(Map<String, dynamic> json) {
     return Attendance(
-      checkinAt:
-          json['checkinAt'] != null ? DateTime.parse(json['checkinAt']) : null,
+      checkinAt: DateTime.parse(json['checkinAt']),
       checkoutAt: json['checkoutAt'] != null
           ? DateTime.parse(json['checkoutAt'])
           : null,
@@ -57,7 +56,9 @@ class Attendance {
     var result = await apiProvider.request(query: query, variables: {});
 
     if (result != null) {
-      print(result);
+      return true;
     }
+
+    return false;
   }
 }
