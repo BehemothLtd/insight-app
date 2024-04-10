@@ -59,11 +59,19 @@ class AttendanceController extends GetxController {
       selfAttendanceToday.value?.checkoutAt != null;
 
   attend() async {
+    String notiMessage = "";
+
+    if (needToCheckIn) {
+      notiMessage = "Checked In";
+    } else if (checkedIn) {
+      notiMessage = "Checked Out";
+    }
+
     var result = await Attendance.attend();
 
     if (result) {
       showCustomSnackbar(
-        message: "Checked In",
+        message: notiMessage,
         title: 'Success',
         backgroundColor: Colors.blue,
         iconData: Icons.check,

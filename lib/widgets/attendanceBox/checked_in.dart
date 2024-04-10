@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insight_app/controllers/attendance_controller.dart';
 import 'package:insight_app/utils/time.dart';
 
 import 'package:insight_app/models/attendance.dart';
@@ -15,6 +17,8 @@ class CheckedIn extends StatelessWidget {
   Widget build(BuildContext context) {
     // Format the dates to be more user-friendly
     String checkinTime = formatTime(attendance?.checkinAt, 'hh:mm a');
+
+    final attendanceController = Get.put(AttendanceController());
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -41,7 +45,44 @@ class CheckedIn extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton.icon(
             onPressed: () {
-              // Handle checkout action
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Row(
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Colors.red,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Check Out',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                    content: const Text('Are you sure you want to check out?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context)
+                            .pop(), // Dismiss the dialog but do nothing
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Dismiss the dialog and perform the check-in action
+                          Navigator.of(context).pop();
+                          attendanceController.attend();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(
               Icons.logout,

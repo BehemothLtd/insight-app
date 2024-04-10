@@ -27,8 +27,6 @@ class CheckIn extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
-              // attendanceController.attend();
-              // Show the dialog here
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
