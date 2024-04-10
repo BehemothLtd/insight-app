@@ -14,6 +14,7 @@ class AuthController extends GetxController {
 
   ApiProvider apiProvider = Get.find<ApiProvider>();
 
+  // computed
   bool get signedIn => token.value != null;
 
   setToken(value) {

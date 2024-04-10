@@ -8,6 +8,8 @@ import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/home/attendance_box.dart';
 import 'package:insight_app/widgets/home/top_container.dart';
+import 'package:insight_app/widgets/home/user_general_metrics.dart';
+import 'package:insight_app/widgets/uis/info_card.dart';
 import 'package:insight_app/widgets/uis/side_drawer.dart';
 
 class HomePage extends StatelessWidget {
@@ -43,6 +45,9 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             HomePageTopContainer(
               width: width,
+              currentUser: currentUser,
+            ),
+            UserGeneralMetrics(
               currentUser: currentUser,
             ),
             const AttendanceBox(),

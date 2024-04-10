@@ -32,7 +32,7 @@ class AttendanceBox extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               width: width,
               child: Card(
                 margin: const EdgeInsets.all(16.0),
@@ -59,7 +59,10 @@ class AttendanceBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Divider(height: 32, thickness: 1),
+                          const Divider(
+                            height: 32,
+                            thickness: 1,
+                          ),
                           if (attendanceController.needToCheckIn)
                             const CheckIn()
                           else if (attendanceController.checkedIn)

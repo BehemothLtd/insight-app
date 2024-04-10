@@ -46,9 +46,7 @@ class AttendanceController extends GetxController {
     return null;
   }
 
-  bool get needToCheckIn =>
-      selfAttendanceToday.value != null &&
-      selfAttendanceToday.value?.checkinAt == null;
+  bool get needToCheckIn => selfAttendanceToday.value == null;
 
   bool get checkedIn =>
       selfAttendanceToday.value != null &&
