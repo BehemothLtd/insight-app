@@ -18,7 +18,7 @@ class CheckedIn extends StatelessWidget {
     // Format the dates to be more user-friendly
     String checkinTime = formatTime(attendance?.checkinAt, 'hh:mm a');
 
-    final attendanceController = Get.put(AttendanceController());
+    final attendanceController = Get.find<AttendanceController>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

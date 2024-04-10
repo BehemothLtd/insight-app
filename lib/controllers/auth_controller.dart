@@ -52,4 +52,19 @@ class AuthController extends GetxController {
       });
     }
   }
+
+  signOut() {
+    setToken(null);
+    showCustomSnackbar(
+      message: "Signed Out",
+      title: 'Success',
+      backgroundColor: Colors.blue,
+      iconData: Icons.check,
+    );
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      Get.close(1);
+      Get.toNamed(Routes.signIn);
+    });
+  }
 }

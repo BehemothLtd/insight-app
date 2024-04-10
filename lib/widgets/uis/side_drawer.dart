@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/models/user.dart';
-
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/user/circle_avatar.dart';
 
@@ -24,6 +25,8 @@ class SideDrawer extends StatelessWidget {
     super.key,
     required this.currentUser,
   });
+
+  static final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,7 @@ class SideDrawer extends StatelessWidget {
     ];
 
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
@@ -91,15 +93,30 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-
-          // Build the list of menu items
-          ...menuItems.map((item) {
-            return ListTile(
-              leading: Icon(item.icon), // The menu item icon
-              title: Text(item.title),
-              onTap: item.onTap,
-            );
-          }),
+          // Menu items
+          Expanded(
+            child: ListView(
+              children: menuItems.map((item) {
+                return ListTile(
+                  leading: Icon(item.icon), // The menu item icon
+                  title: Text(item.title),
+                  onTap: item.onTap,
+                );
+              }).toList(),
+            ),
+          ),
+          const Divider(
+            height: 32,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Sign Out'),
+            onTap: () {
+              authController.signOut();
+            },
+          ),
+          const SizedBox(height: 30),
         ],
       ),
     );

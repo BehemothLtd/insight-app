@@ -16,9 +16,9 @@ class Attendance {
 
   factory Attendance.fromJson(Map<String, dynamic> json) {
     return Attendance(
-      checkinAt: DateTime.parse(json['checkinAt']),
+      checkinAt: DateTime.parse(json['checkinAt']).toLocal(),
       checkoutAt: json['checkoutAt'] != null
-          ? DateTime.parse(json['checkoutAt'])
+          ? DateTime.parse(json['checkoutAt']).toLocal()
           : null,
       createdAt: DateTime.parse(json['createdAt']),
     );

@@ -9,7 +9,7 @@ class CheckIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final attendanceController = Get.put(AttendanceController());
+    final attendanceController = Get.find<AttendanceController>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
