@@ -1,6 +1,7 @@
+import 'package:get/get.dart';
+
 import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
-import 'package:get/get.dart';
 
 class User {
   final BigInt id;

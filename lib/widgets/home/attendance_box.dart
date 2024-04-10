@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import 'package:insight_app/controllers/attendance_controller.dart';
+import 'package:insight_app/widgets/attendanceBox/checked_in.dart';
+import 'package:insight_app/widgets/attendanceBox/not_checked_in.dart';
 
 class AttendanceBox extends StatelessWidget {
   const AttendanceBox({super.key});
@@ -11,7 +14,14 @@ class AttendanceBox extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     final DateTime currentDate = DateTime.now();
 
+    final attendanceController = Get.put(AttendanceController());
     String formattedDate = DateFormat('MMM d, yyyy').format(currentDate);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // This will be called after the widget's build method has finished
+      await attendanceController.fetchSelfAttendances();
+      attendanceController.checkAttendanceToday();
+    });
 
     return Expanded(
       child: Stack(
@@ -33,44 +43,44 @@ class AttendanceBox extends StatelessWidget {
                     vertical: 16.0,
                     horizontal: 16.0,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        formattedDate,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Divider(height: 32, thickness: 1),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Handle check-in action
-                        },
-                        icon: const Icon(Icons.login, size: 24),
-                        label: const Text("Check in"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: const StadiumBorder(),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                  child: Obx(
+                    () {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              // Handle "show more" action
-                            },
-                            child: Text('Show more'),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              formattedDate,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const Divider(height: 32, thickness: 1),
+                          if (attendanceController.selfAttendanceToday.value !=
+                              null)
+                            CheckedIn(
+                              attendance: attendanceController
+                                  .selfAttendanceToday.value,
+                            )
+                          else
+                            const NotCheckedIn(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  // Handle "show more" action
+                                },
+                                child: const Text('Show more'),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),

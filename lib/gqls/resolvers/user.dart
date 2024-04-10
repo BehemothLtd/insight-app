@@ -20,3 +20,29 @@ query {
     }
 }
 """;
+
+const String selfAttendancesGQL = """
+query SelfAttendances {
+    SelfAttendances(
+      input: { perPage: null, page: null }
+      query: { checkinAtLteq: null, checkinAtGteq: null }
+    ) {
+        collection {
+          checkinAt
+          checkoutAt
+          createdAt
+        }
+        metadata {
+          total
+          perPage
+          page
+          pages
+          count
+          next
+          prev
+          from
+          to
+        }
+    }
+}
+""";
