@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insight_app/controllers/attendance_controller.dart';
 
-class NotCheckedIn extends StatelessWidget {
-  const NotCheckedIn({
+class CheckIn extends StatelessWidget {
+  const CheckIn({
     super.key,
   });
 

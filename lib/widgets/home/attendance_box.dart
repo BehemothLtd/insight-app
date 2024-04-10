@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 
 import 'package:insight_app/controllers/attendance_controller.dart';
 import 'package:insight_app/widgets/attendanceBox/checked_in.dart';
-import 'package:insight_app/widgets/attendanceBox/not_checked_in.dart';
+import 'package:insight_app/widgets/attendanceBox/check_in.dart';
+import 'package:insight_app/widgets/attendanceBox/checked_out.dart';
 
 class AttendanceBox extends StatelessWidget {
   const AttendanceBox({super.key});
@@ -59,14 +60,18 @@ class AttendanceBox extends StatelessWidget {
                             ),
                           ),
                           const Divider(height: 32, thickness: 1),
-                          if (attendanceController.selfAttendanceToday.value !=
-                              null)
+                          if (attendanceController.needToCheckIn)
+                            const CheckIn()
+                          else if (attendanceController.checkedIn)
                             CheckedIn(
                               attendance: attendanceController
                                   .selfAttendanceToday.value,
                             )
-                          else
-                            const NotCheckedIn(),
+                          else if (attendanceController.checkedOut)
+                            CheckedOut(
+                              attendance: attendanceController
+                                  .selfAttendanceToday.value,
+                            ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

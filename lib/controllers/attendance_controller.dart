@@ -46,6 +46,20 @@ class AttendanceController extends GetxController {
     return null;
   }
 
+  bool get needToCheckIn =>
+      selfAttendanceToday.value != null &&
+      selfAttendanceToday.value?.checkinAt == null;
+
+  bool get checkedIn =>
+      selfAttendanceToday.value != null &&
+      selfAttendanceToday.value?.checkinAt != null &&
+      selfAttendanceToday.value?.checkoutAt == null;
+
+  bool get checkedOut =>
+      selfAttendanceToday.value != null &&
+      selfAttendanceToday.value?.checkinAt != null &&
+      selfAttendanceToday.value?.checkoutAt != null;
+
   attend() async {
     var result = await Attendance.attend();
 
