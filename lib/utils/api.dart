@@ -58,7 +58,7 @@ class ApiProvider extends GetxController {
             showCustomSnackbar(
               message: "Error Happened",
               title: 'Warning',
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.redAccent,
               iconData: Icons.warning,
             );
           }

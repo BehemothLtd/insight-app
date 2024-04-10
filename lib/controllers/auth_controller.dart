@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/routes/app_pages.dart';
 import 'package:insight_app/utils/api.dart';
-
 import 'package:insight_app/models/user.dart';
+import 'package:insight_app/utils/custom_snackbar.dart';
 
 class AuthController extends GetxController {
   var token = Rxn<String>();
@@ -25,15 +25,7 @@ class AuthController extends GetxController {
   }
 
   signIn(String email, String password) async {
-    const signInMutation = gql.signInGQL;
-
-    var variables = {
-      "email": email,
-      "password": password,
-    };
-
-    var result =
-        await apiProvider.request(query: signInMutation, variables: variables);
+    var result = await User.signIn(email, password);
 
     if (result != null) {
       setToken(result['SignIn']['token']);
@@ -46,8 +38,17 @@ class AuthController extends GetxController {
         setCurrentUser(user);
       }
 
-      Get.close(1);
-      Get.toNamed(Routes.home);
+      showCustomSnackbar(
+        message: "Signed In",
+        title: 'Success',
+        backgroundColor: Colors.blue,
+        iconData: Icons.check,
+      );
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Get.close(1);
+        Get.toNamed(Routes.home);
+      });
     }
   }
 }

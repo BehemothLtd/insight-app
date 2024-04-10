@@ -50,4 +50,20 @@ class User {
 
     return user;
   }
+
+  static signIn(String email, String password) async {
+    const query = gql.signInGQL;
+    ApiProvider apiProvider = Get.put(ApiProvider());
+
+    var result = await apiProvider.request(query: query, variables: {
+      "email": email,
+      "password": password,
+    });
+
+    if (result != null) {
+      return result;
+    }
+
+    return null;
+  }
 }
