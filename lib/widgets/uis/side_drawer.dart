@@ -54,59 +54,24 @@ class SideDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: LightColors.kDarkYellow, // The background color
-            ),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      UserCircleAvatar(currentUser: currentUser),
-                      const SizedBox(width: 16.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            currentUser?.fullName ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                          Text(
-                            currentUser?.email ?? '',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          Header(
+            currentUser: currentUser,
+          ), // Assuming this is your DrawerHeader
+          ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            children: menuItems.map((item) {
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                leading: Icon(item.icon),
+                title: Text(item.title),
+                onTap: item.onTap,
+              );
+            }).toList(),
           ),
-          // Menu items
-          Expanded(
-            child: ListView(
-              children: menuItems.map((item) {
-                return ListTile(
-                  leading: Icon(item.icon), // The menu item icon
-                  title: Text(item.title),
-                  onTap: item.onTap,
-                );
-              }).toList(),
-            ),
-          ),
+          const Spacer(),
           const Divider(
-            height: 32,
+            height: 1,
             thickness: 1,
           ),
           ListTile(
@@ -116,7 +81,59 @@ class SideDrawer extends StatelessWidget {
               authController.signOut();
             },
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 30), // Adjust this space as necessary
+        ],
+      ),
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  const Header({
+    super.key,
+    required this.currentUser,
+  });
+
+  final User? currentUser;
+
+  @override
+  Widget build(BuildContext context) {
+    return DrawerHeader(
+      decoration: const BoxDecoration(
+        color: LightColors.kDarkYellow, // The background color
+      ),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                UserCircleAvatar(currentUser: currentUser),
+                const SizedBox(width: 16.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currentUser?.fullName ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    Text(
+                      currentUser?.email ?? '',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
