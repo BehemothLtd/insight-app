@@ -41,16 +41,34 @@ class ApiProvider extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        var decodedResponse = json.decode(utf8.decode(response.bodyBytes))
-            as Map<String, dynamic>;
+        var decodedResponse = json.decode(utf8.decode(response.bodyBytes));
+        if (decodedResponse is! Map<String, dynamic>) {
+          return;
+        }
 
-        var errors = decodedResponse['errors'];
+        List<dynamic>? errors = decodedResponse['errors'];
 
-        if (errors != null && errors.length > 0) {
+        if (errors != null && errors.isNotEmpty) {
+          var mainErr = errors[0];
+          if (mainErr is! Map<String, dynamic>) {
+            return;
+          }
+
+          var extensions = mainErr['extensions'];
+
+          if (extensions is! Map<String, dynamic>) {
+            return;
+          }
+
           // Error handler
-          var errorCode = errors[0]['extensions']['code'];
+          var errorCode = extensions['code'];
+
+          if (errorCode is! int) {
+            return;
+          }
+
           Map<String, List<String>> errorDetails =
-              convertToSafeMap(errors[0]['extensions']['errors']);
+              convertToSafeMap(mainErr['extensions']['errors']);
 
           if (errorCode == 422) {
             globalController.setErrors(errorDetails);
@@ -61,6 +79,15 @@ class ApiProvider extends GetxController {
               backgroundColor: Colors.redAccent,
               iconData: Icons.warning,
             );
+          } else {
+            if (mainErr['message'] != "") {
+              showCustomSnackbar(
+                message: mainErr['message'],
+                title: "Error Happened",
+                backgroundColor: Colors.redAccent,
+                iconData: Icons.warning,
+              );
+            }
           }
         } else {
           var data = decodedResponse['data'];

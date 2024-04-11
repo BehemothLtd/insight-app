@@ -1,4 +1,6 @@
-Map<String, List<String>> convertToSafeMap(Map<String, dynamic> originalMap) {
+Map<String, List<String>> convertToSafeMap(Map<String, dynamic>? originalMap) {
+  if (originalMap == null) return {};
+
   Map<String, List<String>> safeMap = {};
 
   for (var entry in originalMap.entries) {

@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/utils/time.dart';
+import 'package:insight_app/widgets/form/form_validator.dart';
 
 class LeaveRequestCreate extends StatefulWidget {
   const LeaveRequestCreate({super.key});
@@ -35,21 +41,38 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
   Future<void> _pickDate(BuildContext context,
       {required bool pickingFrom}) async {
     final initialDate = pickingFrom ? from : to ?? DateTime.now();
-    final DateTime? picked = await showDatePicker(
+    final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
-    if (picked != null) {
-      setState(() {
-        if (pickingFrom) {
-          from = picked;
-        } else {
-          to = picked;
-        }
-      });
+    if (selectedDate != null) {
+      if (!context.mounted) return;
+
+      final TimeOfDay? selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDate),
+      );
+
+      if (selectedTime != null) {
+        setState(() {
+          var selected = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+
+          if (pickingFrom) {
+            from = selected;
+          } else {
+            to = selected;
+          }
+        });
+      }
     }
   }
 
@@ -73,121 +96,170 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
           children: [
             Text(
               'Request Leave',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Row(
               children: <Widget>[
                 // "From" Date Picker
                 Expanded(
-                  child: InkWell(
-                    onTap: () => _pickDate(context, pickingFrom: true),
-                    child: InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'From*',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(from != null
-                              ? '${from!.toLocal()}'.split(' ')[0]
-                              : ''),
-                          Icon(Icons.calendar_today,
-                              color: Theme.of(context).primaryColor),
-                        ],
+                  // This will ensure the width is constrained
+                  child: FormValidator(
+                    errorKey: 'from',
+                    child: InkWell(
+                      onTap: () => _pickDate(context, pickingFrom: true),
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'From*',
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(from != null
+                                ? '${from!.toLocal()}'.split(':00.000')[0]
+                                : ''),
+                            Icon(
+                              Icons.calendar_today,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10), // Spacing between the pickers
+                const SizedBox(width: 10), // Spacing between the pickers
                 // "To" Date Picker
                 Expanded(
-                  child: InkWell(
-                    onTap: () => _pickDate(context, pickingFrom: false),
-                    child: InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'To*',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(to != null
-                              ? '${to!.toLocal()}'.split(' ')[0]
-                              : ''),
-                          Icon(Icons.calendar_today,
-                              color: Theme.of(context).primaryColor),
-                        ],
+                  // This will ensure the width is constrained
+                  child: FormValidator(
+                    errorKey: 'to',
+                    child: InkWell(
+                      onTap: () => _pickDate(context, pickingFrom: false),
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'To*',
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 20.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(to != null
+                                ? '${to!.toLocal()}'.split(':00.000')[0]
+                                : ''),
+                            Icon(
+                              Icons.calendar_today,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _timeOffController,
-              decoration: const InputDecoration(
-                labelText: 'Time Off* (hours)',
-                border: OutlineInputBorder(),
+            const SizedBox(height: 15),
+            FormValidator(
+              errorKey: "timeOff",
+              child: TextFormField(
+                controller: _timeOffController,
+                decoration: const InputDecoration(
+                  labelText: 'Time Off* (hours)',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 14.0,
+                  ),
+                  labelStyle: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                // You can still use onChanged if you want to do something every time the value changes.
+                // But for submission purposes, the controller will hold the final value.
               ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              // You can still use onChanged if you want to do something every time the value changes.
-              // But for submission purposes, the controller will hold the final value.
             ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Request Type*',
-                border: OutlineInputBorder(),
+            const SizedBox(height: 15),
+            FormValidator(
+              errorKey: "requestType",
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Request Type*',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 14.0,
+                  ),
+                  labelStyle: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+                value: requestType,
+                items:
+                    requestTypes.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    requestType = newValue;
+                  });
+                },
               ),
-              value: requestType,
-              items: requestTypes.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  requestType = newValue;
-                });
-              },
             ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+            const SizedBox(height: 15),
+            FormValidator(
+              errorKey: "description",
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 14.0,
+                  ),
+                  labelStyle: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+                value: description,
+                items:
+                    descriptions.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    description = newValue;
+                  });
+                },
               ),
-              value: description,
-              items: descriptions.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  description = newValue;
-                });
-              },
             ),
             const SizedBox(height: 30), // Space at the bottom
             ElevatedButton(
               onPressed: () {
                 timeOff = double.tryParse(_timeOffController.text);
 
-                // Implement your submission logic
-                print(from);
-                print(to);
-                print(timeOff);
-                print(requestType);
-                print(description);
+                var leaveRequest = LeaveRequest(
+                  from: formatTime(from, 'dd-MM-yyyy kk:mm'),
+                  to: formatTime(to, 'dd-MM-yyyy kk:mm'),
+                  timeOff: timeOff ?? 0.0,
+                  requestType: requestType,
+                  description: description,
+                );
+
+                leaveRequest.request();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: LightColors.kDarkYellow,
