@@ -7,6 +7,7 @@ import 'package:insight_app/constanst.dart';
 import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/home/attendance_box.dart';
+import 'package:insight_app/widgets/home/leave_request_create.dart';
 import 'package:insight_app/widgets/home/top_container.dart';
 import 'package:insight_app/widgets/home/user_general_metrics.dart';
 import 'package:insight_app/widgets/uis/side_drawer.dart';
@@ -23,6 +24,15 @@ class HomePage extends StatelessWidget {
         fontWeight: FontWeight.w700,
         letterSpacing: 1.2,
       ),
+    );
+  }
+
+  void _showBottomDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return const LeaveRequestCreate();
+      },
     );
   }
 
@@ -55,6 +65,18 @@ class HomePage extends StatelessWidget {
       ),
       drawer: SideDrawer(
         currentUser: currentUser,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showBottomDialog(context),
+        backgroundColor: LightColors.kDarkYellow,
+        // FAB is rounded by default
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(30),
+          ),
+        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
