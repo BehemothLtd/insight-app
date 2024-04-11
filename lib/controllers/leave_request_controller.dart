@@ -5,7 +5,7 @@ import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 
 class LeaveRequestController extends GetxController {
-  createNewRequest(LeaveRequest leaveRequest) async {
+  Future<bool> createNewRequest(LeaveRequest leaveRequest) async {
     var result = await leaveRequest.request();
 
     if (result != null) {
@@ -15,6 +15,10 @@ class LeaveRequestController extends GetxController {
         backgroundColor: Colors.blue,
         iconData: Icons.check,
       );
+
+      return true;
     }
+
+    return false;
   }
 }

@@ -12,8 +12,20 @@ import 'package:insight_app/widgets/home/top_container.dart';
 import 'package:insight_app/widgets/home/user_general_metrics.dart';
 import 'package:insight_app/widgets/uis/side_drawer.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Future<void> onRefresh() async {
+    attendanceBoxKey.currentState?.refreshData();
+  }
+
+  // Key to reference the child component
+  final GlobalKey<AttendanceBoxState> attendanceBoxKey = GlobalKey();
 
   Text subheading(String title) {
     return Text(
@@ -50,17 +62,29 @@ class HomePage extends StatelessWidget {
       ),
       backgroundColor: LightColors.kLightYellow,
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            HomePageTopContainer(
-              width: width,
-              currentUser: currentUser,
+        child: RefreshIndicator(
+          onRefresh: onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  HomePageTopContainer(
+                    width: width,
+                    currentUser: currentUser,
+                  ),
+                  UserGeneralMetrics(
+                    currentUser: currentUser,
+                  ),
+                  AttendanceBox(key: attendanceBoxKey),
+                ],
+              ),
             ),
-            UserGeneralMetrics(
-              currentUser: currentUser,
-            ),
-            const AttendanceBox(),
-          ],
+          ),
         ),
       ),
       drawer: SideDrawer(
