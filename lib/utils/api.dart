@@ -34,6 +34,7 @@ class ApiProvider extends GetxController {
         headers['BhmAIO-Authorization'] =
             token.value != null ? 'Bearer ${token.value}' : "";
       }
+      globalController.setErrors({});
 
       // reset errors on every API call
       globalController.resetErrors();
