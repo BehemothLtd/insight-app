@@ -3,10 +3,11 @@ import 'dart:ffi';
 import 'package:get/get.dart';
 import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
+import 'package:insight_app/utils/time.dart';
 
 class LeaveRequest {
-  String? from;
-  String? to;
+  DateTime? from;
+  DateTime? to;
   double? timeOff;
   String? requestType;
   String? description;
@@ -19,22 +20,22 @@ class LeaveRequest {
     required this.description,
   });
 
-  void request() async {
+  Future<dynamic> request() {
     const query = gql.leaveRequestCreateGQL;
 
     final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var variables = {
       "input": {
-        "from": from ?? "",
-        "to": to ?? "",
+        "from": formatTime(from, 'dd-MM-yyyy HH:mm'),
+        "to": formatTime(to, 'dd-MM-yyyy HH:mm'),
         "timeOff": timeOff,
         "requestType": requestType ?? "",
         "description": description ?? "",
       }
     };
 
-    await apiProvider.request(
+    return apiProvider.request(
       query: query,
       variables: variables,
     );

@@ -1,10 +1,9 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:insight_app/controllers/leave_request_controller.dart';
 import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/utils/time.dart';
 import 'package:insight_app/widgets/form/form_validator.dart';
 
 class LeaveRequestCreate extends StatefulWidget {
@@ -23,11 +22,11 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
 
   final TextEditingController _timeOffController = TextEditingController();
 
-  final List<String> requestTypes = [
-    'Day off',
-    'WFH',
-    'Insurance',
-    'Personal day off',
+  final List<Map<String, String>> requestTypes = [
+    {'label': 'Day off', 'value': 'day_off'},
+    {'label': 'WFH', 'value': 'wfh'},
+    {'label': 'Insurance', 'value': 'insurance'},
+    {'label': 'Personal day off', 'value': 'personal_days_off'},
   ];
 
   final List<String> descriptions = [
@@ -37,6 +36,9 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
     'Hiếu hỉ / ma chay',
     'Xe hỏng/ báo thức hỏng',
   ];
+
+  final LeaveRequestController leaveRequestController =
+      Get.put(LeaveRequestController());
 
   Future<void> _pickDate(BuildContext context,
       {required bool pickingFrom}) async {
@@ -202,11 +204,11 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
                   ),
                 ),
                 value: requestType,
-                items:
-                    requestTypes.map<DropdownMenuItem<String>>((String value) {
+                items: requestTypes
+                    .map<DropdownMenuItem<String>>((Map<String, String> type) {
                   return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                    value: type['value'],
+                    child: Text(type['label']!),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -249,17 +251,57 @@ class _LeaveRequestCreateState extends State<LeaveRequestCreate> {
             const SizedBox(height: 30), // Space at the bottom
             ElevatedButton(
               onPressed: () {
-                timeOff = double.tryParse(_timeOffController.text);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Row(
+                        children: [
+                          Icon(
+                            Icons.date_range,
+                            color: Colors.green,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Request Leave',
+                            style: TextStyle(
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      content:
+                          const Text('Are you sure you want to request leave?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context)
+                              .pop(), // Dismiss the dialog but do nothing
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Dismiss the dialog and perform the check-in action
+                            Navigator.of(context).pop();
 
-                var leaveRequest = LeaveRequest(
-                  from: formatTime(from, 'dd-MM-yyyy kk:mm'),
-                  to: formatTime(to, 'dd-MM-yyyy kk:mm'),
-                  timeOff: timeOff ?? 0.0,
-                  requestType: requestType,
-                  description: description,
+                            timeOff = double.tryParse(_timeOffController.text);
+
+                            var leaveRequest = LeaveRequest(
+                              from: from,
+                              to: to,
+                              timeOff: timeOff ?? 0.0,
+                              requestType: requestType,
+                              description: description,
+                            );
+
+                            leaveRequestController
+                                .createNewRequest(leaveRequest);
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
                 );
-
-                leaveRequest.request();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: LightColors.kDarkYellow,
