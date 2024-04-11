@@ -6,10 +6,10 @@ import 'package:insight_app/models/user.dart';
 class UserCircleAvatar extends StatelessWidget {
   const UserCircleAvatar({
     super.key,
-    required this.currentUser,
+    required this.user,
   });
 
-  final User? currentUser;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class UserCircleAvatar extends StatelessWidget {
       child: ClipOval(
         child: FadeInImage.assetNetwork(
           placeholder: 'assets/images/avatar.png',
-          image: currentUser?.avatarUrl ?? '',
+          image: user?.avatarUrl ?? '',
           fit: BoxFit.cover,
           width: 70.0,
           height: 70.0,

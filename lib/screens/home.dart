@@ -1,4 +1,6 @@
 // Outer Libs
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,11 +23,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future<void> onRefresh() async {
+    // Refresh data on attendance
     attendanceBoxKey.currentState?.refreshData();
+
+    // Refresh data on user
+    _fetchSelfGeneralInfo();
   }
 
   // Key to reference the child component
   final GlobalKey<AttendanceBoxState> attendanceBoxKey = GlobalKey();
+
+  // AuthController
+  final AuthController authController = Get.find<AuthController>();
 
   Text subheading(String title) {
     return Text(
@@ -48,12 +57,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _fetchSelfGeneralInfo() {
+    authController.fetchSelfGeneralInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-
-    final AuthController authController = Get.find<AuthController>();
-    final currentUser = authController.currentUser.value;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,12 +83,16 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  HomePageTopContainer(
-                    width: width,
-                    currentUser: currentUser,
+                  Obx(
+                    () => HomePageTopContainer(
+                      width: width,
+                      currentUser: authController.currentUser.value,
+                    ),
                   ),
-                  UserGeneralMetrics(
-                    currentUser: currentUser,
+                  Obx(
+                    () => UserGeneralMetrics(
+                      currentUser: authController.currentUser.value,
+                    ),
                   ),
                   AttendanceBox(key: attendanceBoxKey),
                 ],
@@ -87,8 +101,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: SideDrawer(
-        currentUser: currentUser,
+      drawer: Obx(
+        () => SideDrawer(
+          currentUser: authController.currentUser.value,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(

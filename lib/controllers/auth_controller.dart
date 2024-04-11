@@ -25,19 +25,23 @@ class AuthController extends GetxController {
     currentUser.value = user;
   }
 
+  fetchSelfGeneralInfo() async {
+    User? user;
+    // Get User Info
+    user = await User.fetchSelfGeneralInfo();
+
+    if (user != null) {
+      setCurrentUser(user);
+    }
+  }
+
   signIn(String email, String password) async {
     var result = await User.signIn(email, password);
 
     if (result != null) {
       setToken(result['SignIn']['token']);
 
-      User? user;
-      // Get User Info
-      user = await User.fetchSelfGeneralInfo();
-
-      if (user != null) {
-        setCurrentUser(user);
-      }
+      fetchSelfGeneralInfo();
 
       showCustomSnackbar(
         message: "Signed In",

@@ -40,7 +40,7 @@ class HomePageTopContainer extends StatelessWidget {
                     ),
                   );
                 }),
-                UserCircleAvatar(currentUser: currentUser),
+                UserCircleAvatar(user: currentUser),
               ],
             ),
             const SizedBox(

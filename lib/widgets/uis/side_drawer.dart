@@ -108,7 +108,7 @@ class Header extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                UserCircleAvatar(currentUser: currentUser),
+                UserCircleAvatar(user: currentUser),
                 const SizedBox(width: 16.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
