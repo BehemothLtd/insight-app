@@ -62,7 +62,7 @@ class AuthController extends GetxController {
       iconData: Icons.check,
     );
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       Get.close(1);
       Get.toNamed(Routes.signIn);
     });

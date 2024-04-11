@@ -7,6 +7,7 @@ void showCustomSnackbar({
   Color? backgroundColor,
   IconData? iconData,
   Color? iconColor,
+  int? duration,
 }) {
   Get.snackbar(
     title ?? "Info",
@@ -17,6 +18,6 @@ void showCustomSnackbar({
       color: iconColor ?? Colors.white,
     ),
     colorText: Colors.white,
-    duration: const Duration(seconds: 2),
+    duration: Duration(seconds: (duration ?? 2)),
   );
 }

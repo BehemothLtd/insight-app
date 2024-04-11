@@ -95,10 +95,23 @@ class ApiProvider extends GetxController {
           return data;
         }
       } else if (response.statusCode == 500) {
+        showCustomSnackbar(
+          message: "SERVER ERROR",
+          title: "Error Happened",
+          backgroundColor: Colors.redAccent,
+          iconData: Icons.warning,
+          duration: 5,
+        );
         return null;
       }
     } catch (e) {
-      print(e);
+      showCustomSnackbar(
+        message: e.toString(),
+        title: "Error Happened",
+        backgroundColor: Colors.redAccent,
+        iconData: Icons.warning,
+        duration: 5,
+      );
 
       return null;
     }
