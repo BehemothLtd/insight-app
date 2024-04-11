@@ -110,7 +110,9 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 15),
-              Row(
+              Flex(
+                direction: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
                     child: FormValidator(
@@ -173,6 +175,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                 ],
               ),
               const SizedBox(height: 15),
+
               FormValidator(
                 errorKey: "timeOff",
                 child: TextFormField(
