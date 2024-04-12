@@ -216,9 +216,11 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
-                    setState(() {
-                      requestType = newValue;
-                    });
+                    setState(
+                      () {
+                        requestType = newValue;
+                      },
+                    );
                   },
                 ),
               ),
@@ -275,7 +277,8 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                           ],
                         ),
                         content: const Text(
-                            'Are you sure you want to request leave?'),
+                          'Are you sure you want to request leave?',
+                        ),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
