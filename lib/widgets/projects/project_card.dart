@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:insight_app/models/project.dart';
 import 'package:insight_app/models/user.dart';
@@ -114,8 +113,7 @@ class ProjectCard extends StatelessWidget {
 
   Widget _buildProjectTypeIcon(Project project) {
     return CircleAvatar(
-      backgroundColor:
-          Colors.blue, // Use whatever background color is appropriate
+      backgroundColor: Colors.blue,
       radius: 35,
       child: ClipOval(
           child: FadeInImage.assetNetwork(
