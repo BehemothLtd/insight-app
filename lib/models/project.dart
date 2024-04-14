@@ -17,6 +17,7 @@ class Project {
   DateTime? startedAt;
   DateTime? endedAt;
   List<ProjectAssignee>? projectAssignees;
+  String? logoUrl;
 
   Project({
     this.id,
@@ -26,6 +27,7 @@ class Project {
     this.projectType,
     this.state,
     this.projectAssignees,
+    this.logoUrl,
   });
 
   factory Project.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class Project {
       description: json['description'],
       projectType: json['projectType'],
       state: json['state'],
+      logoUrl: json['logoUrl'],
       projectAssignees: projectAssignees,
     );
   }

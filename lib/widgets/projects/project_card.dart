@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:insight_app/models/project.dart';
 import 'package:insight_app/models/user.dart';
@@ -44,11 +45,7 @@ class ProjectCard extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 30,
-                        child: _buildProjectTypeIcon(project.projectType!),
-                      ),
+                      _buildProjectTypeIcon(project),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -64,7 +61,7 @@ class ProjectCard extends StatelessWidget {
                             ),
                             Text(
                               project.code ?? "",
-                              style: const TextStyle(color: Colors.black54),
+                              style: const TextStyle(color: Colors.black87),
                             ),
                           ],
                         ),
@@ -94,14 +91,27 @@ class ProjectCard extends StatelessWidget {
     );
   }
 
-  Widget _buildProjectTypeIcon(String projectType) {
-    IconData iconData =
-        projectType == "scrum" ? Icons.check_circle_outline : Icons.view_kanban;
-    Color iconColor =
-        projectType == "scrum" ? Colors.blueAccent : Colors.deepOrange;
+  Widget _buildProjectTypeIcon(Project project) {
     return CircleAvatar(
-      backgroundColor: Colors.white,
-      child: Icon(iconData, color: iconColor),
+      backgroundColor:
+          Colors.blue, // Use whatever background color is appropriate
+      radius: 35,
+      child: ClipOval(
+          child: FadeInImage.assetNetwork(
+        placeholder: 'assets/images/no-image.jpg',
+        image: project.logoUrl ?? "",
+        fit: BoxFit.cover,
+        width: 70.0,
+        height: 70.0,
+        fadeInDuration: const Duration(milliseconds: 200),
+        fadeOutDuration: const Duration(milliseconds: 100),
+        placeholderErrorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/no-image.jpg');
+        },
+        imageErrorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/no-image.jpg');
+        },
+      )),
     );
   }
 }

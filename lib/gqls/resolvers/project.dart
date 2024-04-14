@@ -7,8 +7,9 @@ const String projectsListGQL = """
         code
         description
         projectType
-        projectPriority
         state
+        lockVersion
+        logoUrl
         projectAssignees {
           user {
             id
