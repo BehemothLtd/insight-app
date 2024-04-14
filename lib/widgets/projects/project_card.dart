@@ -92,6 +92,8 @@ class ProjectCard extends StatelessWidget {
                   Text(
                     project.description ?? "",
                     style: const TextStyle(color: Colors.black54),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
