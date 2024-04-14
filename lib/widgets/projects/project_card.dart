@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:insight_app/models/project.dart';
 import 'package:insight_app/models/user.dart';
-import 'package:insight_app/widgets/user/circle_avatar.dart';
+import 'package:insight_app/widgets/user/users_avatar_group.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
@@ -24,52 +24,72 @@ class ProjectCard extends StatelessWidget {
 
     List<User> uniqueUsers = uniqueUserMap.values.toList();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-      child: Card(
-        elevation: 2, // Adjust the elevation as needed
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        color: project.state == "active" ? Colors.teal[100] : Colors.grey[300],
-        child: Theme(
-          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-          child: ExpansionTile(
-            title: Text(
-              project.name ?? "",
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Text(
-              project.code ?? "",
-              style: const TextStyle(color: Colors.black54),
-            ),
-            leading: _buildProjectTypeIcon(project.projectType!),
-            children: <Widget>[
-              if (project.description != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: Text(project.description!),
-                ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Wrap(
-                  spacing: 5.0, // Spacing between each avatar
-                  children: uniqueUsers
-                      .map((user) => Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: UserCircleAvatar(
-                              user: user,
-                              size: 20,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Card(
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            color: project.state == "active"
+                ? Colors.green[100]
+                : Colors.grey[300],
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 30,
+                        child: _buildProjectTypeIcon(project.projectType!),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              project.name ?? "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ))
-                      .toList(),
-                ),
+                            Text(
+                              project.code ?? "",
+                              style: const TextStyle(color: Colors.black54),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    project.description ?? "",
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 15,
+            right: 20,
+            child: UsersAvatarGroup(
+              users: uniqueUsers,
+              max: 3,
+              avatarSize: 23,
+            ),
+          ),
+        ],
       ),
     );
   }
