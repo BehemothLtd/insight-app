@@ -6,8 +6,8 @@ import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/user/circle_avatar.dart';
 
-class HomePageTopContainer extends StatelessWidget {
-  const HomePageTopContainer({
+class HomeScreenTopContainer extends StatelessWidget {
+  const HomeScreenTopContainer({
     super.key,
     required this.width,
     required this.currentUser,

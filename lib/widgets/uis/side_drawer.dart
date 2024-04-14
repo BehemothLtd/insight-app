@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/models/user.dart';
+import 'package:insight_app/routes/app_pages.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/widgets/user/circle_avatar.dart';
 
@@ -46,6 +47,14 @@ class SideDrawer extends StatelessWidget {
         onTap: () {
           Navigator.pop(context); // Close the drawer
           // Navigate to the Profile screen
+        },
+      ),
+      MenuItem(
+        title: 'Projects',
+        icon: Icons.work,
+        onTap: () {
+          Navigator.pop(context); // Close the drawer
+          Get.toNamed(Routes.projects);
         },
       ),
       // Add more menu items here

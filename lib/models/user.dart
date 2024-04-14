@@ -4,22 +4,22 @@ import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
 
 class User {
-  final BigInt id;
-  final String email;
-  final String name;
-  final String fullName;
-  final int issuesCount;
-  final int projectsCount;
-  final String avatarUrl;
+  BigInt? id;
+  String? email;
+  String? name;
+  String? fullName;
+  int? issuesCount;
+  int? projectsCount;
+  String? avatarUrl;
 
   User({
-    required this.id,
-    required this.email,
-    required this.name,
-    required this.fullName,
+    this.id,
+    this.email,
+    this.name,
+    this.fullName,
     this.issuesCount = 0,
     this.projectsCount = 0,
-    required this.avatarUrl,
+    this.avatarUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

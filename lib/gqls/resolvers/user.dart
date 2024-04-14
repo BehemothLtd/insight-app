@@ -1,5 +1,5 @@
 const String selfGeneralInfoGQL = """
-query {
+  query {
     SelfGeneralInfo {
         id
         email
@@ -18,11 +18,12 @@ query {
             }
         }
     }
-}
+  }
 """;
 
+// TODO: add params to filter
 const String selfAttendancesGQL = """
-query SelfAttendances {
+  query SelfAttendances {
     SelfAttendances(
       input: { perPage: null, page: null }
       query: { checkinAtLteq: null, checkinAtGteq: null }
@@ -44,5 +45,5 @@ query SelfAttendances {
           to
         }
     }
-}
+  }
 """;

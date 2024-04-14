@@ -8,14 +8,14 @@ import 'package:insight_app/widgets/auth/auth_input_field.dart';
 import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/uis/primary_button.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInScreenState extends State<SignInScreen> {
   String email = "";
   String password = "";
 

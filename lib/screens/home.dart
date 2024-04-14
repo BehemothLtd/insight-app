@@ -1,6 +1,4 @@
 // Outer Libs
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,14 +12,14 @@ import 'package:insight_app/widgets/home/top_container.dart';
 import 'package:insight_app/widgets/home/user_general_metrics.dart';
 import 'package:insight_app/widgets/uis/side_drawer.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   Future<void> onRefresh() async {
     // Refresh data on attendance
     attendanceBoxKey.currentState?.refreshData();
@@ -84,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Obx(
-                    () => HomePageTopContainer(
+                    () => HomeScreenTopContainer(
                       width: width,
                       currentUser: authController.currentUser.value,
                     ),
