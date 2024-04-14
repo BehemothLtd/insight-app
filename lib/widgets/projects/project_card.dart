@@ -63,6 +63,27 @@ class ProjectCard extends StatelessWidget {
                               project.code ?? "",
                               style: const TextStyle(color: Colors.black87),
                             ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0,
+                                vertical: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: project.projectType == 'scrum'
+                                    ? Colors.green
+                                    : Colors
+                                        .blue, // Choose color based on project type
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Text(
+                                project.projectType!
+                                    .toUpperCase(), // Display the project type in uppercase
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
