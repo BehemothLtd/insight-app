@@ -19,11 +19,6 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   final projectController = Get.put(ProjectController());
   final ScrollController _scrollController = ScrollController();
 
-  late TextEditingController nameController;
-  late TextEditingController descriptionController;
-  late TextEditingController projectTypeController;
-  late TextEditingController stateController;
-
   bool _showScrollToTopButton = false;
   Timer? _scrollTimer;
 
@@ -31,15 +26,6 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-
-    nameController = TextEditingController(
-        text: projectController.projectsQuery.value?.nameCont);
-    descriptionController = TextEditingController(
-        text: projectController.projectsQuery.value?.descriptionCont);
-    projectTypeController = TextEditingController(
-        text: projectController.projectsQuery.value?.projectTypeEq);
-    stateController = TextEditingController(
-        text: projectController.projectsQuery.value?.stateEq);
   }
 
   void _scrollListener() {
@@ -73,6 +59,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
         title: 'Notice',
         backgroundColor: Colors.blue,
         iconData: Icons.info,
+        duration: 1,
       );
     } catch (e) {
       showCustomSnackbar(
@@ -80,6 +67,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
         title: 'Info',
         backgroundColor: Colors.blue,
         iconData: Icons.warning,
+        duration: 1,
       );
     }
   }
@@ -111,13 +99,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ProjectsFilter(
-          nameController: nameController,
-          descriptionController: descriptionController,
-          projectTypeController: projectTypeController,
-          stateController: stateController,
-          projectController: projectController,
-        );
+        return const ProjectsFilter();
       },
     );
   }
@@ -138,12 +120,16 @@ class ProjectsScreenState extends State<ProjectsScreen> {
         children: [
           RefreshIndicator(
             onRefresh: () async {
+              await projectController.resetPagy();
+              await projectController.resetParams();
+
               await projectController.fetchProjects(true);
               showCustomSnackbar(
                 message: 'Projects Refreshed',
                 title: 'Notice',
                 backgroundColor: Colors.blue,
                 iconData: Icons.info,
+                duration: 1,
               );
             },
             child: Obx(() {

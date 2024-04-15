@@ -12,18 +12,6 @@ class ProjectController extends GetxController {
   var metadata = Rxn<Metadata>(null);
   var projectsQuery = Rxn<ProjectsQuery>(ProjectsQuery());
 
-  appendProjects(List<Project> newProjects, bool resetProjects) {
-    if (resetProjects) {
-      projects.value = null;
-    }
-
-    if (projects.value == null) {
-      projects.value = newProjects;
-    } else {
-      projects.value = [...projects.value!, ...newProjects];
-    }
-  }
-
   setInput(value) {
     input.value = value;
   }
@@ -42,54 +30,41 @@ class ProjectController extends GetxController {
   }
 
   resetParams() {
-    resetPagy();
-    projectsQuery.value = null;
-  }
-
-  setQuery({String? nameCont}) {
-    if (nameCont != null) {
-      projectsQuery.value!.nameCont = nameCont;
-    }
+    projectsQuery.value = ProjectsQuery();
   }
 
   fetchProjects(bool isRefresh) async {
-    if (!isRefresh) {
-      if (input.value != null && metadata.value != null) {
-        var maxPages = metadata.value?.pages ?? 10;
-        if (input.value!.page > maxPages) {
-          return Future.error('No more projects to load');
-        }
+    if (input.value != null && metadata.value != null) {
+      var maxPages = metadata.value?.pages ?? 10;
+      if (input.value!.page > maxPages) {
+        return Future.error('No more projects to load');
       }
+    }
 
-      var result =
-          await Project.fetchProjects(input.value, projectsQuery.value);
+    var result = await Project.fetchProjects(input.value, projectsQuery.value);
 
-      if (result != null) {
-        var moreProjects = result['list'];
+    if (result != null) {
+      var list = result['list'];
+
+      Metadata metadata = result['metadata'];
+
+      setMetadata(metadata);
+      setInput(
+        PagyInput(
+          perPage: metadata.perPage ?? 1,
+          page: metadata.page ?? 10,
+        ),
+      );
+
+      if (isRefresh) {
+        projects.value = result['list'];
+      } else {
         if (projects.value != null) {
-          projects.value = [...projects.value!, ...moreProjects];
+          projects.value = [...projects.value!, ...list];
         } else {
-          projects.value = moreProjects;
+          projects.value = list;
         }
-
-        Metadata metadata = result['metadata'];
-
-        setMetadata(metadata);
-        setInput(
-          PagyInput(
-            perPage: metadata.perPage ?? 1,
-            page: metadata.page ?? 10,
-          ),
-        );
       }
-    } else {
-      resetParams();
-      resetPagy();
-
-      var result =
-          await Project.fetchProjects(input.value, projectsQuery.value);
-
-      projects.value = result['list'];
     }
   }
 }

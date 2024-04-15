@@ -65,8 +65,6 @@ class Project {
 
     var result = await apiProvider.request(query: query, variables: variables);
 
-    print(projectsQuery?.toJson());
-
     if (result != null) {
       var collection = result['Projects']['collection'];
 
