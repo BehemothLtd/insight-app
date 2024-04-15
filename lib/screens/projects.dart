@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:async';
 
 import 'package:insight_app/controllers/project_controller.dart';
+import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 import 'package:insight_app/widgets/projects/project_card.dart';
 
@@ -16,6 +17,9 @@ class ProjectsScreen extends StatefulWidget {
 class ProjectsScreenState extends State<ProjectsScreen> {
   final projectController = Get.put(ProjectController());
   final ScrollController _scrollController = ScrollController();
+
+  late TextEditingController nameController;
+
   bool _showScrollToTopButton = false;
   Timer? _scrollTimer;
 
@@ -23,6 +27,9 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+
+    nameController = TextEditingController(
+        text: projectController.projectsQuery.value?.nameCont);
   }
 
   void _scrollListener() {
@@ -83,6 +90,54 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     );
   }
 
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Search Projects"),
+          content: Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  onChanged: (value) {
+                    projectController.projectsQuery.value?.nameCont = value;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  onChanged: (value) => {},
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Project Type'),
+                  onChanged: (value) => {},
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'State'),
+                  onChanged: (value) => {},
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                projectController.resetPagy();
+                projectController.fetchProjects(true);
+              },
+              child: const Text('Search'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,16 +159,23 @@ class ProjectsScreenState extends State<ProjectsScreen> {
             },
             child: Obx(() {
               var projects = projectController.projects.value;
-              if (projects == null || projects.isEmpty) {
+              if (projectController.loading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
-              return ListView.builder(
-                controller: _scrollController,
-                itemCount: projects.length,
-                itemBuilder: (context, index) {
-                  return ProjectCard(project: projects[index]);
-                },
-              );
+
+              if (projects == null || projects.isEmpty) {
+                return const Center(
+                  child: Text("No Projects"),
+                );
+              } else {
+                return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: projects.length,
+                  itemBuilder: (context, index) {
+                    return ProjectCard(project: projects[index]);
+                  },
+                );
+              }
             }),
           ),
           if (_showScrollToTopButton) ...[
@@ -127,6 +189,13 @@ class ProjectsScreenState extends State<ProjectsScreen> {
             ),
           ],
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showSearchDialog,
+        tooltip: 'Search Projects',
+        backgroundColor: LightColors.kDarkYellow,
+        child: const Icon(Icons.search),
       ),
     );
   }

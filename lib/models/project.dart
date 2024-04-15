@@ -53,16 +53,19 @@ class Project {
     );
   }
 
-  static fetchProjects(PagyInput? input) async {
+  static fetchProjects(PagyInput? input, ProjectsQuery? projectsQuery) async {
     const query = gql.projectsListGQL;
 
     final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var variables = {
       'input': input?.toJson() ?? {},
+      'query': projectsQuery?.toJson() ?? {},
     };
 
     var result = await apiProvider.request(query: query, variables: variables);
+
+    print(projectsQuery?.toJson());
 
     if (result != null) {
       var collection = result['Projects']['collection'];
