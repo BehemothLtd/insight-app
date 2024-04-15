@@ -46,11 +46,18 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
         borderRadius:
             BorderRadius.circular(16), // Rounded corners for the AlertDialog
       ),
-      title: const Text(
-        "Search",
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
+      title: const Row(
+        children: [
+          Icon(Icons.search, color: Colors.blue),
+          SizedBox(width: 10),
+          Text(
+            "Search",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ],
       ),
       titlePadding: const EdgeInsets.fromLTRB(
         24.0,
