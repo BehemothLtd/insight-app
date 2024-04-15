@@ -12,7 +12,11 @@ class ProjectController extends GetxController {
   var metadata = Rxn<Metadata>(null);
   var projectsQuery = Rxn<ProjectsQuery>(null);
 
-  appendProjects(List<Project> newProjects) {
+  appendProjects(List<Project> newProjects, bool resetProjects) {
+    if (resetProjects) {
+      projects.value = null;
+    }
+
     if (projects.value == null) {
       projects.value = newProjects;
     } else {
@@ -38,7 +42,7 @@ class ProjectController extends GetxController {
     projectsQuery.value = null;
   }
 
-  fetchProjects() async {
+  fetchProjects([bool resetProjects = false]) async {
     if (input.value != null && metadata.value != null) {
       var maxPages = metadata.value?.pages ?? 10;
       if (input.value!.page > maxPages) {
@@ -49,7 +53,7 @@ class ProjectController extends GetxController {
     var result = await Project.fetchProjects(input.value);
 
     if (result != null) {
-      appendProjects(result['list']);
+      appendProjects(result['list'], resetProjects);
 
       Metadata metadata = result['metadata'];
 

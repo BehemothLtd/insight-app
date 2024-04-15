@@ -100,7 +100,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
           RefreshIndicator(
             onRefresh: () async {
               await projectController.resetParams();
-              await projectController.fetchProjects();
+              await projectController.fetchProjects(true);
             },
             child: Obx(() {
               var projects = projectController.projects.value;
