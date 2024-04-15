@@ -11,7 +11,6 @@ class ProjectController extends GetxController {
   var input = Rxn<PagyInput>(PagyInput(page: 1, perPage: 10));
   var metadata = Rxn<Metadata>(null);
   var projectsQuery = Rxn<ProjectsQuery>(ProjectsQuery());
-  var loading = RxBool(false);
 
   appendProjects(List<Project> newProjects, bool resetProjects) {
     if (resetProjects) {
@@ -53,31 +52,44 @@ class ProjectController extends GetxController {
     }
   }
 
-  fetchProjects([bool resetProjects = false]) async {
-    loading.value = true;
-
-    if (input.value != null && metadata.value != null) {
-      var maxPages = metadata.value?.pages ?? 10;
-      if (input.value!.page > maxPages) {
-        return Future.error('No more projects to load');
+  fetchProjects(bool isRefresh) async {
+    if (!isRefresh) {
+      if (input.value != null && metadata.value != null) {
+        var maxPages = metadata.value?.pages ?? 10;
+        if (input.value!.page > maxPages) {
+          return Future.error('No more projects to load');
+        }
       }
-    }
 
-    var result = await Project.fetchProjects(input.value, projectsQuery.value);
+      var result =
+          await Project.fetchProjects(input.value, projectsQuery.value);
 
-    loading.value = false;
-    if (result != null) {
-      appendProjects(result['list'], resetProjects);
+      if (result != null) {
+        var moreProjects = result['list'];
+        if (projects.value != null) {
+          projects.value = [...projects.value!, ...moreProjects];
+        } else {
+          projects.value = moreProjects;
+        }
 
-      Metadata metadata = result['metadata'];
+        Metadata metadata = result['metadata'];
 
-      setMetadata(metadata);
-      setInput(
-        PagyInput(
-          perPage: metadata.perPage ?? 1,
-          page: metadata.page ?? 10,
-        ),
-      );
+        setMetadata(metadata);
+        setInput(
+          PagyInput(
+            perPage: metadata.perPage ?? 1,
+            page: metadata.page ?? 10,
+          ),
+        );
+      }
+    } else {
+      resetParams();
+      resetPagy();
+
+      var result =
+          await Project.fetchProjects(input.value, projectsQuery.value);
+
+      projects.value = result['list'];
     }
   }
 }

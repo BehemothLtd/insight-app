@@ -6,6 +6,7 @@ import 'package:insight_app/controllers/project_controller.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 import 'package:insight_app/widgets/projects/project_card.dart';
+import 'package:insight_app/widgets/projects/projects_filter.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
@@ -19,6 +20,9 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   final ScrollController _scrollController = ScrollController();
 
   late TextEditingController nameController;
+  late TextEditingController descriptionController;
+  late TextEditingController projectTypeController;
+  late TextEditingController stateController;
 
   bool _showScrollToTopButton = false;
   Timer? _scrollTimer;
@@ -30,6 +34,12 @@ class ProjectsScreenState extends State<ProjectsScreen> {
 
     nameController = TextEditingController(
         text: projectController.projectsQuery.value?.nameCont);
+    descriptionController = TextEditingController(
+        text: projectController.projectsQuery.value?.descriptionCont);
+    projectTypeController = TextEditingController(
+        text: projectController.projectsQuery.value?.projectTypeEq);
+    stateController = TextEditingController(
+        text: projectController.projectsQuery.value?.stateEq);
   }
 
   void _scrollListener() {
@@ -52,11 +62,18 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     }
   }
 
+  // Load more projects when user scroll to bottom
   void _onScrollBottom() async {
     await projectController.increasePage();
 
     try {
-      await projectController.fetchProjects();
+      await projectController.fetchProjects(false);
+      showCustomSnackbar(
+        message: 'More Projects Loaded',
+        title: 'Notice',
+        backgroundColor: Colors.blue,
+        iconData: Icons.info,
+      );
     } catch (e) {
       showCustomSnackbar(
         message: e.toString(),
@@ -94,45 +111,12 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Search Projects"),
-          content: Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  onChanged: (value) {
-                    projectController.projectsQuery.value?.nameCont = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  onChanged: (value) => {},
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Project Type'),
-                  onChanged: (value) => {},
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'State'),
-                  onChanged: (value) => {},
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-
-                projectController.resetPagy();
-                projectController.fetchProjects(true);
-              },
-              child: const Text('Search'),
-            ),
-          ],
+        return ProjectsFilter(
+          nameController: nameController,
+          descriptionController: descriptionController,
+          projectTypeController: projectTypeController,
+          stateController: stateController,
+          projectController: projectController,
         );
       },
     );
@@ -142,7 +126,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (projectController.projects.value?.isEmpty ?? true) {
-        projectController.fetchProjects();
+        projectController.fetchProjects(true);
       }
     });
 
@@ -154,14 +138,16 @@ class ProjectsScreenState extends State<ProjectsScreen> {
         children: [
           RefreshIndicator(
             onRefresh: () async {
-              await projectController.resetParams();
               await projectController.fetchProjects(true);
+              showCustomSnackbar(
+                message: 'Projects Refreshed',
+                title: 'Notice',
+                backgroundColor: Colors.blue,
+                iconData: Icons.info,
+              );
             },
             child: Obx(() {
               var projects = projectController.projects.value;
-              if (projectController.loading.value) {
-                return const Center(child: CircularProgressIndicator());
-              }
 
               if (projects == null || projects.isEmpty) {
                 return const Center(
@@ -193,8 +179,13 @@ class ProjectsScreenState extends State<ProjectsScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: _showSearchDialog,
-        tooltip: 'Search Projects',
+        tooltip: 'Search',
         backgroundColor: LightColors.kDarkYellow,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(30),
+          ),
+        ),
         child: const Icon(Icons.search),
       ),
     );
