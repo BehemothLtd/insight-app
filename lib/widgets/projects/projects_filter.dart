@@ -164,7 +164,16 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
+            nameController.clear();
+            descriptionController.clear();
+            projectTypeController.clear();
+            stateController.clear();
+
+            // Now call resetParams to clear the projectsQuery values.
             projectController.resetParams();
+
+            // If you want to refresh the UI immediately after clearing the form
+            setState(() {});
           },
           child: const Text(
             'Clear',
