@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 
 import 'package:insight_app/controllers/project_controller.dart';
+import 'package:insight_app/utils/custom_snackbar.dart';
 import 'package:insight_app/widgets/projects/project_card.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -26,6 +26,9 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   }
 
   void _scrollListener() {
+    bool isBottom = _scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent;
+
     if (_scrollController.position.pixels > 0) {
       if (!_showScrollToTopButton) {
         setState(() => _showScrollToTopButton = true);
@@ -35,6 +38,25 @@ class ProjectsScreenState extends State<ProjectsScreen> {
       if (_showScrollToTopButton) {
         setState(() => _showScrollToTopButton = false);
       }
+    }
+
+    if (isBottom) {
+      _onScrollBottom();
+    }
+  }
+
+  void _onScrollBottom() async {
+    await projectController.increasePage();
+
+    try {
+      await projectController.fetchProjects();
+    } catch (e) {
+      showCustomSnackbar(
+        message: e.toString(),
+        title: 'Info',
+        backgroundColor: Colors.blue,
+        iconData: Icons.warning,
+      );
     }
   }
 
@@ -77,6 +99,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
         children: [
           RefreshIndicator(
             onRefresh: () async {
+              await projectController.resetParams();
               await projectController.fetchProjects();
             },
             child: Obx(() {
