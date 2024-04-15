@@ -6,7 +6,10 @@ import 'package:insight_app/controllers/project_controller.dart';
 class ProjectsFilter extends StatefulWidget {
   const ProjectsFilter({
     super.key,
+    required this.onSearch,
   });
+
+  final VoidCallback onSearch;
 
   @override
   State<ProjectsFilter> createState() => _ProjectsFilterState();
@@ -66,21 +69,22 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
-                  onChanged: (value) {
-                    projectController.projectsQuery.update((val) {
-                      val?.nameCont = value;
-                    });
-                  }),
+                ),
+                onChanged: (value) {
+                  projectController.projectsQuery.update((val) {
+                    val?.nameCont = value;
+                  });
+                },
+              ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: descriptionController,
@@ -93,8 +97,11 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                onChanged: (value) => projectController
-                    .projectsQuery.value?.descriptionCont = value,
+                onChanged: (value) {
+                  projectController.projectsQuery.update((val) {
+                    val?.descriptionCont = value;
+                  });
+                },
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
@@ -112,8 +119,10 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
                 ),
                 onChanged: (value) {
                   projectTypeController.text = value ?? '';
-                  projectController.projectsQuery.value?.projectTypeEq =
-                      value ?? '';
+
+                  projectController.projectsQuery.update((val) {
+                    val?.projectTypeEq = value ?? '';
+                  });
                 },
                 items: const [
                   DropdownMenuItem(value: null, child: Text('Both')),
@@ -137,7 +146,10 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
                 ),
                 onChanged: (value) {
                   stateController.text = value ?? '';
-                  projectController.projectsQuery.value?.stateEq = value ?? '';
+
+                  projectController.projectsQuery.update((val) {
+                    val?.stateEq = value ?? '';
+                  });
                 },
                 items: const [
                   DropdownMenuItem(value: null, child: Text('Both')),
@@ -152,10 +164,19 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
-
-            projectController.resetPagy();
-            projectController.fetchProjects(true);
+            projectController.resetParams();
+          },
+          child: const Text(
+            'Clear',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            widget.onSearch();
           },
           child: Text(
             'Search',

@@ -22,6 +22,8 @@ class ProjectsScreenState extends State<ProjectsScreen> {
   bool _showScrollToTopButton = false;
   Timer? _scrollTimer;
 
+  bool _isSearchPanelVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -95,15 +97,6 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     );
   }
 
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const ProjectsFilter();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -115,6 +108,30 @@ class ProjectsScreenState extends State<ProjectsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Projects'),
+        actions: [
+          IconButton(
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, anim) => RotationTransition(
+                turns: child.key == const ValueKey('icon1')
+                    ? Tween<double>(begin: 1, end: 0.75).animate(anim)
+                    : Tween<double>(begin: 0.75, end: 1).animate(anim),
+                child: FadeTransition(opacity: anim, child: child),
+              ),
+              child: _isSearchPanelVisible
+                  ? const Icon(Icons.search_off, key: ValueKey('icon1'))
+                  : const Icon(
+                      Icons.search,
+                      key: ValueKey('icon2'),
+                    ),
+            ),
+            onPressed: () {
+              setState(() {
+                _isSearchPanelVisible = !_isSearchPanelVisible;
+              });
+            },
+          )
+        ],
       ),
       body: Stack(
         children: [
@@ -160,19 +177,27 @@ class ProjectsScreenState extends State<ProjectsScreen> {
               ),
             ),
           ],
+          _buildSearchPanel(),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showSearchDialog,
-        tooltip: 'Search',
-        backgroundColor: LightColors.kDarkYellow,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(30),
-          ),
-        ),
-        child: const Icon(Icons.search),
+    );
+  }
+
+  void _handleSearch() {
+    setState(() {
+      _isSearchPanelVisible = false;
+    });
+
+    // Trigger the search logic
+    projectController.resetPagy();
+    projectController.fetchProjects(true);
+  }
+
+  Widget _buildSearchPanel() {
+    return Visibility(
+      visible: _isSearchPanelVisible,
+      child: ProjectsFilter(
+        onSearch: _handleSearch,
       ),
     );
   }
