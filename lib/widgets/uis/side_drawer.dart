@@ -65,6 +65,14 @@ class SideDrawer extends StatelessWidget {
           Get.toNamed(Routes.projects);
         },
       ),
+       MenuItem(
+        title: 'Leave Request',
+        icon: Icons.calendar_today,
+        onTap: () {
+          Navigator.pop(context); // Close the drawer
+          Get.toNamed(Routes.leaveRequest);
+        },
+      ),
       // Add more menu items here
     ];
 

@@ -17,7 +17,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
   DateTime? to;
   double? timeOff;
   String? requestType;
-  String? description;
+  String? reason;
 
   final TextEditingController _timeOffController = TextEditingController();
 
@@ -229,10 +229,10 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
               ),
               const SizedBox(height: 15),
               FormValidator(
-                errorKey: "description",
+                errorKey: "reason",
                 child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Description',
+                    labelText: 'Reason',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 12.0,
@@ -242,7 +242,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                       fontSize: 13,
                     ),
                   ),
-                  value: description,
+                  value: reason,
                   items: descriptions
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -252,7 +252,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      description = newValue;
+                      reason = newValue;
                     });
                   },
                 ),
@@ -329,7 +329,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
       to: to,
       timeOff: timeOff ?? 0.0,
       requestType: requestType,
-      description: description,
+      reason: reason,
     );
 
     await leaveRequestController.createNewRequest(leaveRequest);

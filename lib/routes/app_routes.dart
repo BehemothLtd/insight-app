@@ -8,6 +8,7 @@ abstract class Routes {
   static const projects = _Paths.projects;
   static const profile = _Paths.profile;
   static const users = _Paths.users;
+  static const leaveRequest = _Paths.leaveRequest;
 }
 
 class _Paths {
@@ -16,4 +17,5 @@ class _Paths {
   static const projects = "/projects";
   static const profile = "/profile";
   static const users = "/users";
+  static const leaveRequest = "/leave_requests";
 }

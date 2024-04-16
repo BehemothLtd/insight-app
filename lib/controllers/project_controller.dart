@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'package:insight_app/models/metadata.dart';
@@ -42,6 +45,8 @@ class ProjectController extends GetxController {
     }
 
     var result = await Project.fetchProjects(input.value, projectsQuery.value);
+
+    debugPrint('12421421421: $result');
 
     if (result != null) {
       var list = result['list'];
