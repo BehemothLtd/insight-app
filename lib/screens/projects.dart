@@ -174,6 +174,7 @@ class ProjectsScreenState extends State<ProjectsScreen> {
               right: 20.0,
               bottom: 20.0,
               child: FloatingActionButton(
+                backgroundColor: LightColors.kDarkYellow,
                 onPressed: _scrollToTop,
                 child: const Icon(Icons.arrow_upward),
               ),
