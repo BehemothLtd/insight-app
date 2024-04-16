@@ -66,7 +66,7 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
         0,
       ), // Consistent padding
       contentPadding: const EdgeInsets.symmetric(
-        horizontal: 24.0,
+        horizontal: 12.0,
         vertical: 20.0,
       ), // Consistent padding
       content: SingleChildScrollView(
@@ -85,6 +85,7 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
                 onChanged: (value) {
                   projectController.projectsQuery.update((val) {
@@ -95,6 +96,7 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: descriptionController,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Description',
                   filled: true,
@@ -103,6 +105,7 @@ class _ProjectsFilterState extends State<ProjectsFilter> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
                 onChanged: (value) {
                   projectController.projectsQuery.update((val) {
