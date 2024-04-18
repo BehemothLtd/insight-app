@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
+import 'package:insight_app/theme/colors/light_colors.dart';
 
 import 'package:insight_app/controllers/user_controller.dart';
-// import 'package:insight_app/widgets/user/user_card.dart';
+import 'package:insight_app/widgets/user/user_card.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 
-class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+class UsersScreen extends StatefulWidget {
+  const UsersScreen({super.key});
 
   @override
-  UserScreenState createState() => UserScreenState();
+  UsersScreenState createState() => UsersScreenState();
 }
 
-class UserScreenState extends State<UserScreen> {
+class UsersScreenState extends State<UsersScreen> {
   final userController = Get.put(UserController());
   final ScrollController _scrollController = ScrollController();
 
@@ -114,33 +115,75 @@ class UserScreenState extends State<UserScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Projects'),
-        actions: [
-          IconButton(
-            icon: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              transitionBuilder: (child, anim) => RotationTransition(
-                turns: child.key == const ValueKey('icon1')
-                    ? Tween<double>(begin: 1, end: 0.75).animate(anim)
-                    : Tween<double>(begin: 0.75, end: 1).animate(anim),
-                child: FadeTransition(opacity: anim, child: child),
+        appBar: AppBar(
+          title: const Text('Users'),
+          actions: [
+            IconButton(
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, anim) => RotationTransition(
+                  turns: child.key == const ValueKey('icon1')
+                      ? Tween<double>(begin: 1, end: 0.75).animate(anim)
+                      : Tween<double>(begin: 0.75, end: 1).animate(anim),
+                  child: FadeTransition(opacity: anim, child: child),
+                ),
+                child: _isSearchPanelVisible
+                    ? const Icon(Icons.search_off, key: ValueKey('icon1'))
+                    : const Icon(
+                        Icons.search,
+                        key: ValueKey('icon2'),
+                      ),
               ),
-              child: _isSearchPanelVisible
-                  ? const Icon(Icons.search_off, key: ValueKey('icon1'))
-                  : const Icon(
-                      Icons.search,
-                      key: ValueKey('icon2'),
-                    ),
-            ),
-            onPressed: () {
-              setState(() {
-                _isSearchPanelVisible = !_isSearchPanelVisible;
-              });
-            },
-          )
-        ],
-      ),
-    );
+              onPressed: () {
+                setState(() {
+                  _isSearchPanelVisible = !_isSearchPanelVisible;
+                });
+              },
+            )
+          ],
+        ),
+        body: Stack(
+          children: [
+            RefreshIndicator(onRefresh: () async {
+              await userController.resetPagy();
+              await userController.resetParams();
+
+              await userController.fetchUsers(true);
+              showCustomSnackbar(
+                message: 'Users Refreshed',
+                title: 'Notice',
+                backgroundColor: Colors.blue,
+                iconData: Icons.info,
+                duration: 1,
+              );
+            }, child: Obx(() {
+              var users = userController.users.value;
+
+              if (users == null || users.isEmpty) {
+                return const Center(
+                  child: Text("No Users"),
+                );
+              } else {
+                return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      return UserCard(user: users[index]);
+                    });
+              }
+            })),
+            if (_showScrollToTopButton) ...[
+              Positioned(
+                right: 20.0,
+                bottom: 20.0,
+                child: FloatingActionButton(
+                  backgroundColor: LightColors.kDarkYellow,
+                  onPressed: _scrollToTop,
+                  child: const Icon(Icons.arrow_upward),
+                ),
+              ),
+            ],
+          ],
+        ));
   }
 }

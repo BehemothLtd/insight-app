@@ -40,12 +40,12 @@ class UserController extends GetxController {
       }
     }
 
-    var result = await User.fetchUsers(input.value, usersQuery.value)
+    var result = await User.fetchUsers(input.value, usersQuery.value);
 
     if (result != null) {
-      var list = result["list"]
+      var list = result["list"];
 
-      Metadata metadata = result["metadata"]
+      Metadata metadata = result["metadata"];
 
       setMetadata(metadata);
       setInput(
