@@ -6,6 +6,7 @@ import "package:flutter_dotenv/flutter_dotenv.dart";
 
 import "package:insight_app/controllers/auth_controller.dart";
 import "package:insight_app/controllers/global_controller.dart";
+import "package:insight_app/routes/app_pages.dart";
 import "package:insight_app/utils/custom_snackbar.dart";
 import "package:insight_app/utils/helpers.dart";
 
@@ -79,6 +80,16 @@ class ApiProvider extends GetxController {
               backgroundColor: Colors.redAccent,
               iconData: Icons.warning,
             );
+          } else if (errorCode == 401) {
+            showCustomSnackbar(
+              message: "You need to sign in",
+              title: 'Warning',
+              backgroundColor: Colors.redAccent,
+              iconData: Icons.warning,
+            );
+
+            Get.close(1);
+            Get.toNamed(Routes.signIn);
           } else {
             if (mainErr['message'] != "") {
               showCustomSnackbar(

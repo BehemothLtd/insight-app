@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:insight_app/models/project.dart';
 import 'package:insight_app/models/user.dart';
+import 'package:insight_app/utils/constants.dart';
 import 'package:insight_app/widgets/user/users_avatar_group.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -114,25 +115,44 @@ class ProjectCard extends StatelessWidget {
   }
 
   Widget _buildProjectTypeIcon(Project project) {
+    String imageUrl = project.logoUrl ?? defaultNoImage();
+
+    bool isNetworkUrl =
+        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+
     return CircleAvatar(
       backgroundColor: Colors.blue,
       radius: 35,
       child: ClipOval(
-          child: FadeInImage.assetNetwork(
-        placeholder: 'assets/images/no-image.jpg',
-        image: project.logoUrl ?? "",
-        fit: BoxFit.cover,
-        width: 70.0,
-        height: 70.0,
-        fadeInDuration: const Duration(milliseconds: 200),
-        fadeOutDuration: const Duration(milliseconds: 100),
-        placeholderErrorBuilder: (context, error, stackTrace) {
-          return Image.asset('assets/images/no-image.jpg');
-        },
-        imageErrorBuilder: (context, error, stackTrace) {
-          return Image.asset('assets/images/no-image.jpg');
-        },
-      )),
+        child: isNetworkUrl
+            ? Image.network(
+                imageUrl,
+                width: 70.0,
+                height: 70.0,
+                fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(imageUrl); // Fallback local asset
+                },
+              )
+            : Image.asset(
+                imageUrl,
+                width: 70.0,
+                height: 70.0,
+                fit: BoxFit.cover,
+              ),
+      ),
     );
   }
 }
