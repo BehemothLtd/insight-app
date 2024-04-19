@@ -2,14 +2,14 @@ class UsersQuery {
   String nameCont;
   String fullNameCont;
   String emailCont;
-  String slackCont;
+  String slackIdLike;
   String stateEq;
 
   UsersQuery({
     this.nameCont = "",
     this.fullNameCont = "",
     this.emailCont = "",
-    this.slackCont = "",
+    this.slackIdLike = "",
     this.stateEq = "",
   });
 
@@ -18,7 +18,7 @@ class UsersQuery {
       'nameCont': nameCont,
       'fullNameCont': fullNameCont,
       'emailCont': emailCont,
-      'slackCont': slackCont,
+      'slackIdLike': slackIdLike,
       'stateEq': stateEq,
     };
   }

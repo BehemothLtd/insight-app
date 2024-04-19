@@ -186,4 +186,20 @@ class UsersScreenState extends State<UsersScreen> {
           ],
         ));
   }
+
+  //   Widget _buildSearchPanel() {
+  //   if (_isSearchPanelVisible) {
+  //     return BackdropFilter(
+  //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+  //       child: Align(
+  //         alignment: Alignment.center,
+  //         child: ProjectsFilter(
+  //           onSearch: _handleSearch,
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     return const SizedBox.shrink();
+  //   }
+  // }
 }
