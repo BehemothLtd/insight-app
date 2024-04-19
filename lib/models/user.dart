@@ -15,6 +15,8 @@ class User {
   int? issuesCount;
   int? projectsCount;
   String? avatarUrl;
+  String? about;
+  String? state;
 
   User({
     this.id,
@@ -24,18 +26,21 @@ class User {
     this.issuesCount = 0,
     this.projectsCount = 0,
     this.avatarUrl,
+    this.about,
+    this.state,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: BigInt.parse(json['id']),
-      email: json['email'],
-      name: json['name'],
-      fullName: json['fullName'],
-      issuesCount: json['issuesCount'],
-      projectsCount: json['projectsCount'],
-      avatarUrl: json['avatarUrl'],
-    );
+        id: BigInt.parse(json['id']),
+        email: json['email'],
+        name: json['name'],
+        fullName: json['fullName'],
+        issuesCount: json['issuesCount'],
+        projectsCount: json['projectsCount'],
+        avatarUrl: json['avatarUrl'],
+        about: json["about"],
+        state: json["state"]);
   }
 
   static fetchSelfGeneralInfo() async {

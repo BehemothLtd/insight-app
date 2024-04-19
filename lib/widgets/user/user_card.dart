@@ -12,30 +12,84 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
+      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Image.network("attachment - avatar link"),
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              "abc",
-              style: TextStyle(fontSize: 16),
+          Card(
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            // check user state to show color
+            color:
+                user.state == "active" ? Colors.green[100] : Colors.grey[300],
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildUserTypeIcon(user),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              user.name ?? "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              user.email ?? "",
+                              style: const TextStyle(color: Colors.black87),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    user.about ?? "",
+                    style: const TextStyle(color: Colors.black54),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildUserTypeIcon(User user) {
+    return CircleAvatar(
+      backgroundColor: Colors.blue,
+      radius: 35,
+      child: ClipOval(
+          child: FadeInImage.assetNetwork(
+        placeholder: 'assets/images/no-image.jpg',
+        image: user.avatarUrl ?? "",
+        fit: BoxFit.cover,
+        width: 70.0,
+        height: 70.0,
+        fadeInDuration: const Duration(milliseconds: 200),
+        fadeOutDuration: const Duration(milliseconds: 100),
+        placeholderErrorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/no-image.jpg');
+        },
+        imageErrorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/no-image.jpg');
+        },
+      )),
     );
   }
 }
