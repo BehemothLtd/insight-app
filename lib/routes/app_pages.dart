@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import 'package:insight_app/screens/home.dart';
+import 'package:insight_app/screens/profile.dart';
 import 'package:insight_app/screens/sign_in.dart';
 import 'package:insight_app/screens/projects.dart';
 
@@ -15,5 +16,6 @@ class AppPages {
     GetPage(name: _Paths.signIn, page: () => const SignInScreen()),
     GetPage(name: _Paths.home, page: () => const HomeScreen()),
     GetPage(name: _Paths.projects, page: () => const ProjectsScreen()),
+    GetPage(name: _Paths.profile, page: () => const ProfileScreen()),
   ];
 }

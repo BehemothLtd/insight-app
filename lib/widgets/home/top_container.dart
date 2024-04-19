@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:insight_app/widgets/uis/top_container.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/widgets/user/circle_avatar.dart';
+import 'package:insight_app/widgets/user/user_circle_avatar.dart';
 
 class HomeScreenTopContainer extends StatelessWidget {
   const HomeScreenTopContainer({

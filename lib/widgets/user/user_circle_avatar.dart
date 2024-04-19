@@ -26,8 +26,8 @@ class UserCircleAvatar extends StatelessWidget {
         child: isNetworkUrl
             ? Image.network(
                 imageUrl,
-                width: 70.0,
-                height: 70.0,
+                width: size * 2,
+                height: size * 2,
                 fit: BoxFit.cover,
                 loadingBuilder: (BuildContext context, Widget child,
                     ImageChunkEvent? loadingProgress) {

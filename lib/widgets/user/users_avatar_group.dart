@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insight_app/models/user.dart';
-import 'package:insight_app/widgets/user/circle_avatar.dart';
+import 'package:insight_app/widgets/user/user_circle_avatar.dart';
 
 class UsersAvatarGroup extends StatelessWidget {
   final List<User> users;

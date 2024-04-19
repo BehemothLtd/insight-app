@@ -4,7 +4,7 @@ import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/routes/app_pages.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/widgets/user/circle_avatar.dart';
+import 'package:insight_app/widgets/user/user_circle_avatar.dart';
 
 // Define a class for menu items
 class MenuItem {
@@ -37,23 +37,23 @@ class SideDrawer extends StatelessWidget {
         title: 'Home',
         icon: Icons.home,
         onTap: () {
-          Navigator.pop(context); // Close the drawer
-          // Navigate to the Home screen
+          Navigator.pop(context);
+          Get.toNamed(Routes.home);
         },
       ),
       MenuItem(
         title: 'Profile',
         icon: Icons.person,
         onTap: () {
-          Navigator.pop(context); // Close the drawer
-          // Navigate to the Profile screen
+          Navigator.pop(context);
+          Get.toNamed(Routes.profile);
         },
       ),
       MenuItem(
         title: 'Projects',
         icon: Icons.work,
         onTap: () {
-          Navigator.pop(context); // Close the drawer
+          Navigator.pop(context);
           Get.toNamed(Routes.projects);
         },
       ),
