@@ -11,6 +11,9 @@ class User {
   int? issuesCount;
   int? projectsCount;
   String? avatarUrl;
+  DateTime? birthday;
+  String? gender;
+  String? phone;
 
   User({
     this.id,
@@ -46,6 +49,21 @@ class User {
       user = User.fromJson(result['SelfGeneralInfo']);
     } else {
       user = null;
+    }
+
+    return user;
+  }
+
+  static fetchProfile() async {
+    const query = gql.selfProfileGQL;
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    User? user;
+
+    var result = await apiProvider.request(query: query, variables: {});
+
+    if (result != null) {
+      user = User.fromJson(result['SelfProfile']);
     }
 
     return user;

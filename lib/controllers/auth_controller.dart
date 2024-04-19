@@ -10,28 +10,47 @@ import 'package:insight_app/utils/custom_snackbar.dart';
 
 class AuthController extends GetxController {
   var token = Rxn<String>();
-  var currentUser = Rxn<User>();
+  var currentUser = Rxn<User>(User());
 
   ApiProvider apiProvider = Get.find<ApiProvider>();
 
   // computed
   bool get signedIn => token.value != null;
 
-  setToken(value) {
+  setToken(String? value) {
     token.value = value;
   }
 
-  setCurrentUser(user) {
+  setCurrentUser(User user) {
     currentUser.value = user;
+  }
+
+  setCurrentUserProfile(User user) {
+    currentUser.value?.email = user.email;
+    currentUser.value?.name = user.name;
+    currentUser.value?.fullName = user.fullName;
+    currentUser.value?.avatarUrl = user.avatarUrl;
+    currentUser.value?.birthday = user.birthday;
+    currentUser.value?.gender = user.gender;
+    currentUser.value?.phone = user.phone;
   }
 
   fetchSelfGeneralInfo() async {
     User? user;
-    // Get User Info
     user = await User.fetchSelfGeneralInfo();
 
     if (user != null) {
       setCurrentUser(user);
+    }
+  }
+
+  fetchSelfProfile() async {
+    User? user;
+
+    user = await User.fetchProfile();
+
+    if (user != null) {
+      setCurrentUserProfile(user);
     }
   }
 
