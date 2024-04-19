@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:insight_app/controllers/user_controller.dart';
@@ -162,19 +161,18 @@ class ProfileScreenState extends State<ProfileScreen> {
                     height: 20,
                   ),
                   _buildTextField(
-                    fullNameController,
-                    'Full Name',
-                    'FullName',
+                    nameController,
+                    'Name',
+                    'Name',
                     cantEdit: true,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   _buildTextField(
-                    nameController,
-                    'Name',
-                    'Name',
-                    cantEdit: true,
+                    fullNameController,
+                    'Full Name',
+                    'FullName',
                   ),
                   const SizedBox(
                     height: 20,

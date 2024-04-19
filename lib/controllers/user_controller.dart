@@ -8,7 +8,6 @@ class UserController extends GetxController {
   var userProfile = Rxn<User>(User());
 
   setCurrentUserProfile(User user) {
-    print("CAME HERE");
     userProfile.value = user;
   }
 
