@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/controllers/auth_controller.dart';
-import 'package:insight_app/widgets/uis/primary_button.dart';
 import 'package:insight_app/widgets/user/user_circle_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  final AuthController authController = Get.find<AuthController>();
+  final UserController userController = Get.put(UserController());
 
   bool _isEditting = false;
 
@@ -32,13 +31,13 @@ class ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
 
-    ever(authController.userProfile, (callback) => _setFormData());
+    ever(userController.userProfile, (callback) => _setFormData());
 
-    authController.fetchSelfProfile();
+    userController.fetchSelfProfile();
   }
 
   void _setFormData() {
-    User? user = authController.userProfile.value;
+    User? user = userController.userProfile.value;
 
     if (user != null) {
       nameController.text = user.name ?? "";
@@ -104,7 +103,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Obx(
                   () => UserCircleAvatar(
-                    user: authController.currentUser.value,
+                    user: userController.userProfile.value,
                     size: 80,
                   ),
                 ),

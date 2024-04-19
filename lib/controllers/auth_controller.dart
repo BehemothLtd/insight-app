@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:insight_app/routes/app_pages.dart';
-import 'package:insight_app/utils/api.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 
 class AuthController extends GetxController {
   var token = Rxn<String>();
   var currentUser = Rxn<User>(User());
-  var userProfile = Rxn<User>(User());
-
-  ApiProvider apiProvider = Get.find<ApiProvider>();
 
   // computed
   bool get signedIn => token.value != null;
@@ -26,26 +22,12 @@ class AuthController extends GetxController {
     currentUser.value = user;
   }
 
-  setCurrentUserProfile(User user) {
-    userProfile.value = user;
-  }
-
   fetchSelfGeneralInfo() async {
     User? user;
     user = await User.fetchSelfGeneralInfo();
 
     if (user != null) {
       setCurrentUser(user);
-    }
-  }
-
-  fetchSelfProfile() async {
-    User? user;
-
-    user = await User.fetchProfile();
-
-    if (user != null) {
-      setCurrentUserProfile(user);
     }
   }
 
