@@ -6,3 +6,4 @@ export './resolvers/project.dart';
 export './mutations/auth.dart';
 export './mutations/attendance.dart';
 export './mutations/leave_request.dart';
+export './mutations/user.dart';

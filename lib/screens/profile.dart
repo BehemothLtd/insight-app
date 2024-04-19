@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/user/user_circle_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -47,6 +49,24 @@ class ProfileScreenState extends State<ProfileScreen> {
       addressController.text = user.address ?? "";
       slackIdController.text = user.slackId ?? "";
       aboutController.text = user.about ?? "";
+    }
+  }
+
+  void _submit() async {
+    SelfUpdateProfileInput profileForm = SelfUpdateProfileInput(
+      about: nameController.text,
+      slackId: slackIdController.text,
+      address: addressController.text,
+      phone: phoneController.text,
+      fullName: fullNameController.text,
+    );
+
+    bool result = await userController.updateProfile(profileForm);
+
+    if (result) {
+      setState(() {
+        _isEditting = false;
+      });
     }
   }
 
@@ -132,32 +152,73 @@ class ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _buildTextField(emailController, 'Email', cantEdit: true),
+                  _buildTextField(
+                    emailController,
+                    'Email',
+                    'Email',
+                    cantEdit: true,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  _buildTextField(nameController, 'Name', cantEdit: true),
+                  _buildTextField(
+                    fullNameController,
+                    'Full Name',
+                    'FullName',
+                    cantEdit: true,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  _buildTextField(phoneController, 'Phone'),
+                  _buildTextField(
+                    nameController,
+                    'Name',
+                    'Name',
+                    cantEdit: true,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  _buildTextField(addressController, 'Address', maxLine: 2),
+                  _buildTextField(
+                    phoneController,
+                    'Phone',
+                    'Phone',
+                    type: TextInputType.phone,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  _buildTextField(slackIdController, 'Slack Id'),
+                  _buildTextField(
+                    addressController,
+                    'Address',
+                    'Address',
+                    maxLine: 2,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  _buildTextField(aboutController, 'About', maxLine: 3),
+                  _buildTextField(
+                    slackIdController,
+                    'Slack Id',
+                    'SlackId',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _buildTextField(
+                    aboutController,
+                    'About',
+                    "About",
+                    maxLine: 3,
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.save, color: Colors.white),
+                    icon: const Icon(
+                      Icons.save,
+                      color: Colors.white,
+                    ),
                     label: const Text(
                       'Save',
                       style: TextStyle(
@@ -205,9 +266,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 child: const Text('Cancel'),
                               ),
                               TextButton(
-                                onPressed: () {
-                                  // Dismiss the dialog and perform the check-in action
+                                onPressed: () async {
                                   Navigator.of(context).pop();
+
+                                  _submit();
                                 },
                                 child: const Text('OK'),
                               ),
@@ -226,32 +288,44 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  TextFormField _buildTextField(TextEditingController controller, String label,
-      {bool cantEdit = false, int maxLine = 1}) {
-    return TextFormField(
-      controller: controller,
-      autocorrect: false,
-      maxLines: maxLine,
-      style: GoogleFonts.lato(
-        textStyle: const TextStyle(
-          fontSize: 14.0,
-          color: LightColors.kDarkBlue,
+  FormValidator _buildTextField(
+    TextEditingController controller,
+    String label,
+    String errorKey, {
+    bool cantEdit = false,
+    int maxLine = 1,
+    TextInputType type = TextInputType.text,
+  }) {
+    return FormValidator(
+      errorKey: errorKey,
+      child: TextFormField(
+        controller: controller,
+        keyboardType: type,
+        autocorrect: false,
+        maxLines: maxLine,
+        style: GoogleFonts.lato(
+          textStyle: const TextStyle(
+            fontSize: 14.0,
+            color: LightColors.kDarkBlue,
+          ),
         ),
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: cantEdit ? Colors.grey[300] : Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: cantEdit
+              ? Colors.grey[300]
+              : (_isEditting ? Colors.white : Colors.grey[300]),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          floatingLabelStyle: const TextStyle(
+            fontSize: 20,
+            color: LightColors.kDarkBlue,
+            fontWeight: FontWeight.w500,
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          enabled: cantEdit ? false : _isEditting,
         ),
-        floatingLabelStyle: const TextStyle(
-          fontSize: 20,
-          color: LightColors.kDarkBlue,
-          fontWeight: FontWeight.w500,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        enabled: cantEdit ? false : _isEditting,
       ),
     );
   }

@@ -10,7 +10,6 @@ class GlobalController extends GetxController {
   }
 
   void resetErrors() {
-    // Use .value to reset the map to empty, notifying all listeners.
     errors.value = <String, List<String>>{};
   }
 }

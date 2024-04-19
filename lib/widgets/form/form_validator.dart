@@ -22,9 +22,10 @@ class FormValidator extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        child, // Directly include the child without padding
+        child,
         Obx(() {
           var fieldErrors = globalController.errors[errorKey];
+
           if (fieldErrors != null && fieldErrors.isNotEmpty) {
             // Use a Column to display all error messages
             return Padding(

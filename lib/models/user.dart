@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:insight_app/controllers/user_controller.dart';
 
 import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
@@ -97,4 +98,43 @@ class User {
 
     return null;
   }
+
+  static Future<User?> updateProfile(SelfUpdateProfileInput input) async {
+    const query = gql.selfUpdateProfileGQL;
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    var result = await apiProvider.request(query: query, variables: {
+      "input": input.toJson(),
+    });
+
+    if (result != null) {
+      return User.fromJson(result['SelfUpdateProfile']['user']);
+    }
+
+    return null;
+  }
+}
+
+class SelfUpdateProfileInput {
+  String about;
+  String slackId;
+  String address;
+  String phone;
+  String fullName;
+
+  SelfUpdateProfileInput({
+    this.fullName = "",
+    this.about = "",
+    this.slackId = "",
+    this.address = "",
+    this.phone = "",
+  });
+
+  Map<String, dynamic> toJson() => {
+        'about': about,
+        'slackId': slackId,
+        'address': address,
+        'phone': phone,
+        'fullName': fullName,
+      };
 }

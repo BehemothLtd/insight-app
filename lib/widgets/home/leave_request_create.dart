@@ -329,10 +329,6 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
       description: description,
     );
 
-    var result = await leaveRequestController.createNewRequest(leaveRequest);
-
-    if (result) {
-      Navigator.pop(context);
-    }
+    await leaveRequestController.createNewRequest(leaveRequest);
   }
 }

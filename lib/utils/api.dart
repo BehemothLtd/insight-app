@@ -32,6 +32,9 @@ class ApiProvider extends GetxController {
             token.value != null ? 'Bearer ${token.value}' : "";
       }
 
+      // reset errors on every API call
+      globalController.resetErrors();
+
       var response = await http.post(
         url,
         headers: headers,
