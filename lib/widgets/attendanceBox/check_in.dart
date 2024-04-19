@@ -49,13 +49,11 @@ class CheckIn extends StatelessWidget {
                     content: const Text('Are you sure you want to check in?'),
                     actions: <Widget>[
                       TextButton(
-                        onPressed: () => Navigator.of(context)
-                            .pop(), // Dismiss the dialog but do nothing
+                        onPressed: () => Navigator.of(context).pop(),
                         child: const Text('Cancel'),
                       ),
                       TextButton(
                         onPressed: () {
-                          // Dismiss the dialog and perform the check-in action
                           Navigator.of(context).pop();
                           attendanceController.attend();
                         },

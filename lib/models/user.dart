@@ -14,6 +14,9 @@ class User {
   DateTime? birthday;
   String? gender;
   String? phone;
+  String? address;
+  String? slackId;
+  String? about;
 
   User({
     this.id,
@@ -23,6 +26,11 @@ class User {
     this.issuesCount = 0,
     this.projectsCount = 0,
     this.avatarUrl,
+    this.gender,
+    this.phone,
+    this.address,
+    this.slackId,
+    this.about,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,10 +42,15 @@ class User {
       issuesCount: json['issuesCount'],
       projectsCount: json['projectsCount'],
       avatarUrl: json['avatarUrl'],
+      gender: json['gender'],
+      phone: json['phone'],
+      address: json['address'],
+      slackId: json['slackId'],
+      about: json['about'],
     );
   }
 
-  static fetchSelfGeneralInfo() async {
+  static Future<User?> fetchSelfGeneralInfo() async {
     const query = gql.selfGeneralInfoGQL;
     final ApiProvider apiProvider = Get.find<ApiProvider>();
 
