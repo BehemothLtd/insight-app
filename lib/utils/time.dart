@@ -9,3 +9,13 @@ String formatTime(DateTime? time, String formatter) {
 
   return formattedTime;
 }
+
+DateTime? formatDateFromDDMMYYYY(String dateString) {
+  DateFormat format = DateFormat("dd-MM-yyyy");
+  try {
+    DateTime dateTime = format.parse(dateString);
+    return dateTime;
+  } catch (e) {
+    return null;
+  }
+}

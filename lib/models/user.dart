@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:insight_app/controllers/user_controller.dart';
 
 import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/utils/api.dart';
+import 'package:insight_app/utils/time.dart';
 
 class User {
   BigInt? id;
@@ -32,6 +32,7 @@ class User {
     this.address,
     this.slackId,
     this.about,
+    this.birthday,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -48,6 +49,9 @@ class User {
       address: json['address'],
       slackId: json['slackId'],
       about: json['about'],
+      birthday: json['birthday'] != null
+          ? formatDateFromDDMMYYYY(json['birthday'])
+          : null,
     );
   }
 
@@ -121,6 +125,7 @@ class SelfUpdateProfileInput {
   String address;
   String phone;
   String fullName;
+  String birthday;
 
   SelfUpdateProfileInput({
     this.fullName = "",
@@ -128,6 +133,7 @@ class SelfUpdateProfileInput {
     this.slackId = "",
     this.address = "",
     this.phone = "",
+    this.birthday = "",
   });
 
   Map<String, dynamic> toJson() => {
@@ -136,5 +142,6 @@ class SelfUpdateProfileInput {
         'address': address,
         'phone': phone,
         'fullName': fullName,
+        'birthday': birthday,
       };
 }

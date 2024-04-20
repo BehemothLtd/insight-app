@@ -5,8 +5,10 @@ import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/utils/time.dart';
 import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/user/user_circle_avatar.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,6 +29,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController addressController = TextEditingController();
   TextEditingController slackIdController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +51,8 @@ class ProfileScreenState extends State<ProfileScreen> {
       addressController.text = user.address ?? "";
       slackIdController.text = user.slackId ?? "";
       aboutController.text = user.about ?? "";
+      birthdayController.text =
+          user.birthday != null ? formatTime(user.birthday, "dd-MM-yyyy") : "";
     }
   }
 
@@ -58,6 +63,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       address: addressController.text,
       phone: phoneController.text,
       fullName: fullNameController.text,
+      birthday: birthdayController.text,
     );
 
     bool result = await userController.updateProfile(profileForm);
@@ -78,7 +84,23 @@ class ProfileScreenState extends State<ProfileScreen> {
     addressController.dispose();
     slackIdController.dispose();
     aboutController.dispose();
+    birthdayController.dispose();
+
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        birthdayController.text = formatTime(picked, "dd-MM-yyyy");
+      });
+    }
   }
 
   @override
@@ -173,6 +195,25 @@ class ProfileScreenState extends State<ProfileScreen> {
                     fullNameController,
                     'Full Name',
                     'FullName',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: birthdayController,
+                    autocorrect: false,
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        fontSize: 14.0,
+                        color: LightColors.kDarkBlue,
+                      ),
+                    ),
+                    decoration: generalInputDecoration(
+                      'Birthday',
+                      false,
+                    ),
+                    readOnly: true,
+                    onTap: () => _selectDate(context),
                   ),
                   const SizedBox(
                     height: 20,
@@ -307,24 +348,28 @@ class ProfileScreenState extends State<ProfileScreen> {
             color: LightColors.kDarkBlue,
           ),
         ),
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: cantEdit
-              ? Colors.grey[300]
-              : (_isEditting ? Colors.white : Colors.grey[300]),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          floatingLabelStyle: const TextStyle(
-            fontSize: 20,
-            color: LightColors.kDarkBlue,
-            fontWeight: FontWeight.w500,
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          enabled: cantEdit ? false : _isEditting,
-        ),
+        decoration: generalInputDecoration(label, cantEdit),
       ),
+    );
+  }
+
+  InputDecoration generalInputDecoration(String label, bool cantEdit) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: cantEdit
+          ? Colors.grey[300]
+          : (_isEditting ? Colors.white : Colors.grey[300]),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      floatingLabelStyle: const TextStyle(
+        fontSize: 20,
+        color: LightColors.kDarkBlue,
+        fontWeight: FontWeight.w500,
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      enabled: cantEdit ? false : _isEditting,
     );
   }
 }
