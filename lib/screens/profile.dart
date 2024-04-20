@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
-import 'package:insight_app/utils/helpers.dart';
 import 'package:insight_app/utils/time.dart';
 import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/user/user_circle_avatar.dart';
@@ -24,6 +24,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   final UserController userController = Get.put(UserController());
 
   bool _isEditting = false;
+  final ImagePicker _picker = ImagePicker();
 
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -148,6 +149,22 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _pickImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Update the user profile picture with the new image
+        // For example, you might want to upload this file to a server, or you can directly display it
+        // userController.updateUserProfileImage(pickedFile.path);
+        print(pickedFile.path);
+      }
+    } catch (e) {
+      // Handle errors or user cancellation
+      print('Failed to pick image: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,10 +217,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                         child: CircleAvatar(
                           backgroundColor: LightColors.kDarkYellow,
                           child: IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.white),
-                            onPressed: () {
-                              // TODO: Implement image update functionality
-                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                            onPressed: _pickImage,
                           ),
                         ),
                       )
