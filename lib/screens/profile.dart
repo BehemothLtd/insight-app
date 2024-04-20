@@ -5,10 +5,10 @@ import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/utils/helpers.dart';
 import 'package:insight_app/utils/time.dart';
 import 'package:insight_app/widgets/form/form_validator.dart';
 import 'package:insight_app/widgets/user/user_circle_avatar.dart';
-import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,6 +16,9 @@ class ProfileScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ProfileScreenState();
 }
+
+typedef DateSelector = Future<void> Function(BuildContext);
+typedef GenderSelector = Future<void> Function(BuildContext);
 
 class ProfileScreenState extends State<ProfileScreen> {
   final UserController userController = Get.put(UserController());
@@ -30,6 +33,13 @@ class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController slackIdController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+
+  Map<String, String> genderOptions = {
+    'Male': 'male',
+    'Female': 'female',
+    'Bisexuality': 'bisexuality',
+  };
 
   @override
   void initState() {
@@ -53,6 +63,12 @@ class ProfileScreenState extends State<ProfileScreen> {
       aboutController.text = user.about ?? "";
       birthdayController.text =
           user.birthday != null ? formatTime(user.birthday, "dd-MM-yyyy") : "";
+      if (user.gender != null) {
+        genderController.text = genderOptions.entries
+            .firstWhere((entry) => entry.value == user.gender,
+                orElse: () => const MapEntry('', ''))
+            .key;
+      }
     }
   }
 
@@ -64,6 +80,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       phone: phoneController.text,
       fullName: fullNameController.text,
       birthday: birthdayController.text,
+      gender: genderOptions[genderController.text] ?? '',
     );
 
     bool result = await userController.updateProfile(profileForm);
@@ -85,6 +102,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     slackIdController.dispose();
     aboutController.dispose();
     birthdayController.dispose();
+    genderController.dispose();
 
     super.dispose();
   }
@@ -100,6 +118,33 @@ class ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         birthdayController.text = formatTime(picked, "dd-MM-yyyy");
       });
+    }
+  }
+
+  Future<void> _selectGender(BuildContext context) async {
+    final selectedGender = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Select Gender'),
+          children: genderOptions.entries.map((entry) {
+            return SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, entry.value);
+              },
+              child: Text(entry.key),
+            );
+          }).toList(),
+        );
+      },
+    );
+
+    // Use the selected value to update the controller
+    if (selectedGender != null) {
+      genderController.text = genderOptions.entries
+          .firstWhere((entry) => entry.value == selectedGender,
+              orElse: () => const MapEntry('', ''))
+          .key;
     }
   }
 
@@ -199,21 +244,20 @@ class ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFormField(
-                    controller: birthdayController,
-                    autocorrect: false,
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                        fontSize: 14.0,
-                        color: LightColors.kDarkBlue,
-                      ),
-                    ),
-                    decoration: generalInputDecoration(
-                      'Birthday',
-                      false,
-                    ),
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
+                  _buildTextField(
+                    birthdayController,
+                    'Birthday',
+                    'Birthday',
+                    onSelectDate: _selectDate,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _buildTextField(
+                    genderController,
+                    'Gender',
+                    'Gender',
+                    onSelectGender: _selectGender,
                   ),
                   const SizedBox(
                     height: 20,
@@ -334,6 +378,8 @@ class ProfileScreenState extends State<ProfileScreen> {
     bool cantEdit = false,
     int maxLine = 1,
     TextInputType type = TextInputType.text,
+    DateSelector? onSelectDate,
+    GenderSelector? onSelectGender,
   }) {
     return FormValidator(
       errorKey: errorKey,
@@ -349,6 +395,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         decoration: generalInputDecoration(label, cantEdit),
+        onTap: () => {
+          if (onSelectDate != null)
+            {onSelectDate(context)}
+          else if (onSelectGender != null)
+            {onSelectGender(context)}
+        },
       ),
     );
   }

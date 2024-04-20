@@ -126,6 +126,7 @@ class SelfUpdateProfileInput {
   String phone;
   String fullName;
   String birthday;
+  String gender;
 
   SelfUpdateProfileInput({
     this.fullName = "",
@@ -134,6 +135,7 @@ class SelfUpdateProfileInput {
     this.address = "",
     this.phone = "",
     this.birthday = "",
+    this.gender = "",
   });
 
   Map<String, dynamic> toJson() => {
@@ -143,5 +145,6 @@ class SelfUpdateProfileInput {
         'phone': phone,
         'fullName': fullName,
         'birthday': birthday,
+        'gender': gender,
       };
 }
