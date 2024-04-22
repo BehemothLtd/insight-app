@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
 
 import 'package:insight_app/gqls/index.dart' as gql;
+import 'package:insight_app/models/pagy_input.dart';
+import 'package:insight_app/models/users_query.dart';
 import 'package:insight_app/utils/api.dart';
 import 'package:insight_app/utils/time.dart';
+import 'package:insight_app/models/metadata.dart';
 
 class User {
   BigInt? id;
@@ -18,22 +21,23 @@ class User {
   String? address;
   String? slackId;
   String? about;
+  String? state;
 
-  User({
-    this.id,
-    this.email,
-    this.name,
-    this.fullName,
-    this.issuesCount = 0,
-    this.projectsCount = 0,
-    this.avatarUrl,
-    this.gender,
-    this.phone,
-    this.address,
-    this.slackId,
-    this.about,
-    this.birthday,
-  });
+  User(
+      {this.id,
+      this.email,
+      this.name,
+      this.fullName,
+      this.issuesCount = 0,
+      this.projectsCount = 0,
+      this.avatarUrl,
+      this.gender,
+      this.phone,
+      this.address,
+      this.slackId,
+      this.about,
+      this.birthday,
+      this.state});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -52,6 +56,7 @@ class User {
       birthday: json['birthday'] != null
           ? formatDateFromDDMMYYYY(json['birthday'])
           : null,
+      state: json["state"],
     );
   }
 
@@ -116,6 +121,29 @@ class User {
     }
 
     return null;
+  }
+
+  static fetchUsers(PagyInput? input, UsersQuery? usersQuery) async {
+    const query = gql.usersListGQL;
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    var variables = {
+      "input": input?.toJson() ?? {},
+      "query": usersQuery?.toJson() ?? {}
+    };
+
+    var result = await apiProvider.request(query: query, variables: variables);
+
+    if (result != null) {
+      var collection = result["Users"]["collection"];
+
+      var users = collection.map<User>((json) => User.fromJson(json)).toList();
+
+      var metadata = Metadata.fromJson(
+          result["Users"]["metadata"] as Map<String, dynamic>);
+
+      return {"list": users, "metadata": metadata};
+    }
   }
 }
 

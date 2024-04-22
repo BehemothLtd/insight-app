@@ -50,6 +50,14 @@ class SideDrawer extends StatelessWidget {
         },
       ),
       MenuItem(
+        title: 'Users',
+        icon: Icons.people_alt_rounded,
+        onTap: () {
+          Navigator.pop(context); // Close the drawer
+          Get.toNamed(Routes.users);
+        },
+      ),
+      MenuItem(
         title: 'Projects',
         icon: Icons.work,
         onTap: () {

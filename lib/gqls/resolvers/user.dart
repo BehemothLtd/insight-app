@@ -65,3 +65,39 @@ query {
   }
 }
 """;
+
+const String usersListGQL = """
+  query (\$input: PagyInput, \$query: UsersQuery) {
+    Users(input: \$input, query: \$query) {
+      collection {
+        id
+        email
+        fullName
+        name
+        about
+        avatarUrl
+        createdAt
+        companyLevelId
+        state
+        address
+        birthday
+        gender
+        phone
+        timingActiveAt
+        timingDeactiveAt
+        slackId
+      }
+      metadata {
+        total
+        perPage
+        page
+        pages
+        count
+        next
+        prev
+        from
+        to
+      }
+    }
+  }
+""";
