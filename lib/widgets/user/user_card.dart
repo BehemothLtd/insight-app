@@ -46,6 +46,13 @@ class UserCard extends StatelessWidget {
                               ),
                             ),
                             Text(
+                              user.fullName ?? "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
                               user.email ?? "",
                               style: const TextStyle(color: Colors.black87),
                             ),
