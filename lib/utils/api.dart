@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
 import "package:get/get.dart";
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as path;
 import 'dart:convert';
 import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:image_picker/image_picker.dart";
 
 import "package:insight_app/controllers/auth_controller.dart";
 import "package:insight_app/controllers/global_controller.dart";
@@ -17,7 +20,7 @@ class ApiProvider extends GetxController {
     bool signInRequired = true,
   }) async {
     final AuthController authController = Get.find<AuthController>();
-    final GlobalController globalController = Get.put(GlobalController());
+    final GlobalController globalController = Get.find<GlobalController>();
 
     Uri url = Uri.parse('${dotenv.env["API_BASE_URL"]}/insightGql');
 
@@ -129,5 +132,82 @@ class ApiProvider extends GetxController {
 
       return null;
     }
+  }
+
+  Future<dynamic>? upload({
+    required List<XFile> files,
+  }) async {
+    final AuthController authController = Get.find<AuthController>();
+
+    Uri url = Uri.parse('${dotenv.env["API_BASE_URL"]}/uploads');
+    var token = authController.token;
+    var request = http.MultipartRequest('POST', url)
+      ..headers.addAll({
+        'BhmAIO-Authorization':
+            token.value != null ? 'Bearer ${token.value}' : "",
+      });
+
+    try {
+      // Attach files to the request
+      for (XFile file in files) {
+        var fileStream = http.ByteStream(file.openRead())..cast();
+        var length = await file.length();
+
+        var multipartFile = http.MultipartFile(
+          'files[]', // Make sure to match the name expected by the server
+          fileStream,
+          length,
+          filename: path.basename(file.path),
+          contentType: MediaType(
+            'image',
+            file.path.split('.').last,
+          ),
+        );
+
+        request.files.add(multipartFile);
+      }
+
+      // Send the request to the server
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+
+        // Decode the JSON data returned by the server
+        var responseData = json.decode(responseBody);
+
+        showCustomSnackbar(
+          message: 'Uploaded files',
+          title: "Success",
+          backgroundColor: Colors.greenAccent,
+          iconData: Icons.info,
+          duration: 1,
+        );
+
+        return responseData['data'];
+      } else {
+        // Handle errors or unsuccessful uploads
+        showCustomSnackbar(
+          message:
+              'Failed to upload images. Status code: ${response.statusCode}',
+          title: "Error Happened",
+          backgroundColor: Colors.redAccent,
+          iconData: Icons.warning,
+          duration: 5,
+        );
+      }
+    } catch (e) {
+      showCustomSnackbar(
+        message: e.toString(),
+        title: "Error Happened",
+        backgroundColor: Colors.redAccent,
+        iconData: Icons.warning,
+        duration: 5,
+      );
+
+      return null;
+    }
+
+    return null;
   }
 }

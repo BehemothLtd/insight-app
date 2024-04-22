@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:insight_app/controllers/global_controller.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,6 +14,7 @@ void main() async {
   runApp(const MyApp());
   Get.put(ApiProvider());
   Get.put(AuthController());
+  Get.put(GlobalController());
 }
 
 class MyApp extends StatefulWidget {

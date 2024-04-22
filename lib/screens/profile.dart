@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insight_app/controllers/user_controller.dart';
+import 'package:insight_app/models/file_upload.dart';
 import 'package:insight_app/models/user.dart';
 
 import 'package:insight_app/theme/colors/light_colors.dart';
@@ -35,6 +36,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController aboutController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
   TextEditingController genderController = TextEditingController();
+  TextEditingController avatarController = TextEditingController();
 
   Map<String, String> genderOptions = {
     'Male': 'male',
@@ -84,6 +86,10 @@ class ProfileScreenState extends State<ProfileScreen> {
       gender: genderOptions[genderController.text] ?? '',
     );
 
+    if (avatarController.text != "") {
+      profileForm.avatarKey = avatarController.text;
+    }
+
     bool result = await userController.updateProfile(profileForm);
 
     if (result) {
@@ -104,6 +110,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     aboutController.dispose();
     birthdayController.dispose();
     genderController.dispose();
+    avatarController.dispose();
 
     super.dispose();
   }
@@ -157,7 +164,14 @@ class ProfileScreenState extends State<ProfileScreen> {
         // Update the user profile picture with the new image
         // For example, you might want to upload this file to a server, or you can directly display it
         // userController.updateUserProfileImage(pickedFile.path);
-        print(pickedFile.path);
+        var result = await FileUpload.upload(pickedFile);
+
+        if (result != null) {
+          setState(() {
+            avatarController.text = result[0].key;
+            userController.userProfile.value?.avatarUrl = result[0].url;
+          });
+        }
       }
     } catch (e) {
       // Handle errors or user cancellation
@@ -315,71 +329,74 @@ class ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.save,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      'Save',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
-                      ),
-                      elevation: 2,
-                    ),
-                    onPressed: () => {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Row(
-                              children: [
-                                Icon(
-                                  Icons.save,
-                                  color: Colors.green,
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Update Info',
-                                  style: TextStyle(
-                                    color: Colors.green,
+                  _isEditting
+                      ? ElevatedButton.icon(
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            'Save',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 12,
+                            ),
+                            elevation: 2,
+                          ),
+                          onPressed: () => {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.save,
+                                        color: Colors.green,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Update Info',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            content: const Text(
-                              'Are you sure you want to update your info?',
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
+                                  content: const Text(
+                                    'Are you sure you want to update your info?',
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
 
-                                  _submit();
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    },
-                  ),
+                                        _submit();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            )
+                          },
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

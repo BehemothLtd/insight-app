@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
 
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
@@ -31,6 +32,8 @@ class UserController extends GetxController {
       );
 
       setCurrentUserProfile(user);
+      AuthController authController = Get.find<AuthController>();
+      authController.fetchSelfGeneralInfo();
 
       return true;
     }
