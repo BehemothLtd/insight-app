@@ -249,160 +249,165 @@ class ProfileScreenState extends State<ProfileScreen> {
             child: Form(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _buildTextField(
-                    emailController,
-                    'Email',
-                    'Email',
-                    cantEdit: true,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    nameController,
-                    'Name',
-                    'Name',
-                    cantEdit: true,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    fullNameController,
-                    'Full Name',
-                    'FullName',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    birthdayController,
-                    'Birthday',
-                    'Birthday',
-                    onSelectDate: _selectDate,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    genderController,
-                    'Gender',
-                    'Gender',
-                    onSelectGender: _selectGender,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    phoneController,
-                    'Phone',
-                    'Phone',
-                    type: TextInputType.phone,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    addressController,
-                    'Address',
-                    'Address',
-                    maxLine: 2,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    slackIdController,
-                    'Slack Id',
-                    'SlackId',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildTextField(
-                    aboutController,
-                    'About',
-                    "About",
-                    maxLine: 3,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _isEditting
-                      ? ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.save,
-                            color: Colors.white,
-                          ),
-                          label: const Text(
-                            'Save',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 12,
-                            ),
-                            elevation: 2,
-                          ),
-                          onPressed: () => {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Row(
-                                    children: [
-                                      Icon(
-                                        Icons.save,
-                                        color: Colors.green,
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        'Update Info',
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  content: const Text(
-                                    'Are you sure you want to update your info?',
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-
-                                        _submit();
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            )
-                          },
-                        )
-                      : const SizedBox.shrink(),
-                ],
+                children: _buildForm(context),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  List<Widget> _buildForm(BuildContext context) {
+    return <Widget>[
+      _buildTextField(
+        emailController,
+        'Email',
+        'Email',
+        cantEdit: true,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        nameController,
+        'Name',
+        'Name',
+        cantEdit: true,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        fullNameController,
+        'Full Name',
+        'FullName',
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        birthdayController,
+        'Birthday',
+        'Birthday',
+        onSelectDate: _selectDate,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        genderController,
+        'Gender',
+        'Gender',
+        onSelectGender: _selectGender,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        phoneController,
+        'Phone',
+        'Phone',
+        type: TextInputType.phone,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        addressController,
+        'Address',
+        'Address',
+        maxLine: 2,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        slackIdController,
+        'Slack Id',
+        'SlackId',
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _buildTextField(
+        aboutController,
+        'About',
+        "About",
+        maxLine: 3,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      _isEditting ? _buildSubmitBtn(context) : const SizedBox.shrink(),
+    ];
+  }
+
+  ElevatedButton _buildSubmitBtn(BuildContext context) {
+    return ElevatedButton.icon(
+      icon: const Icon(
+        Icons.save,
+        color: Colors.white,
+      ),
+      label: const Text(
+        'Save',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 32,
+          vertical: 12,
+        ),
+        elevation: 2,
+      ),
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Row(
+                children: [
+                  Icon(
+                    Icons.save,
+                    color: Colors.green,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Update Info',
+                    style: TextStyle(
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+              content: const Text(
+                'Are you sure you want to update your info?',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+
+                    _submit();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        )
+      },
     );
   }
 
