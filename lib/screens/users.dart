@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -6,6 +8,7 @@ import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/widgets/user/user_card.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
+import 'package:insight_app/widgets/user/user_filter.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -183,23 +186,24 @@ class UsersScreenState extends State<UsersScreen> {
                 ),
               ),
             ],
+            _buildSearchPanel(),
           ],
         ));
   }
 
-  //   Widget _buildSearchPanel() {
-  //   if (_isSearchPanelVisible) {
-  //     return BackdropFilter(
-  //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-  //       child: Align(
-  //         alignment: Alignment.center,
-  //         child: ProjectsFilter(
-  //           onSearch: _handleSearch,
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     return const SizedBox.shrink();
-  //   }
-  // }
+  Widget _buildSearchPanel() {
+    if (_isSearchPanelVisible) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Align(
+          alignment: Alignment.center,
+          child: UsersFilter(
+            onSearch: _handleSearch,
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
 }
