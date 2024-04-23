@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:insight_app/gqls/index.dart' as gql;
@@ -6,6 +8,7 @@ import 'package:insight_app/models/metadata.dart';
 import 'package:insight_app/models/pagy_input.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/utils/api.dart';
+import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/time.dart';
 
 class LeaveRequest {
@@ -71,6 +74,26 @@ class LeaveRequest {
     );
   }
 
+  static Future<LeaveRequest?> approveLeaveRequest(
+      LeaveRequestChangeStatusInput leaveRequestChangeStatusInput) async {
+    const query = gql.leaveRequestChangeStateGQL;
+
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    var variables = leaveRequestChangeStatusInput.toJson();
+
+    print("dsadsadas ${variables}");
+
+    var result = await apiProvider.request(query: query, variables: variables);
+
+    if (result != null) {
+      return LeaveRequest.fromJson(
+          result['LeaveDayRequestStateChange']['leaveDayRequest']);
+    }
+
+    return null;
+  }
+
   static fetchLeaveRequests(
       PagyInput? input, LeaveRequestsQuery? leaveRequestsQuery) async {
     const query = gql.leaveRequestsListGQL;
@@ -100,4 +123,19 @@ class LeaveRequest {
       };
     }
   }
+}
+
+class LeaveRequestChangeStatusInput {
+  BigInt id;
+  String requestState;
+
+  LeaveRequestChangeStatusInput({
+    required this.id,
+    required this.requestState,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id.toString(),
+        'requestState': requestState,
+      };
 }

@@ -31,6 +31,26 @@ class LeaveRequestController extends GetxController {
     return false;
   }
 
+  Future<String?> approveLeaveRequest(
+    LeaveRequestChangeStatusInput leaveRequestChangeStatusInput,
+  ) async {
+    var result =
+        await LeaveRequest.approveLeaveRequest(leaveRequestChangeStatusInput);
+
+    if (result != null) {
+      showCustomSnackbar(
+        message: "Leave Request Submitted",
+        title: 'Success',
+        backgroundColor: Colors.blue,
+        iconData: Icons.check,
+      );
+
+      return result.requestState;
+    }
+
+    return "";
+  }
+
   var leaveRquests = Rxn<List<LeaveRequest>>([]);
   var input = Rxn<PagyInput>(PagyInput(page: 1, perPage: 10));
   var metadata = Rxn<Metadata>(null);

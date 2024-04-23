@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:insight_app/controllers/leave_request_controller.dart';
+import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
+import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 import 'package:insight_app/widgets/leave_requests/leave_request_card.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -116,6 +118,7 @@ class RequestListState extends State<RequestList> {
     }
   }
 
+  void _approveRequest() async {}
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -141,26 +144,69 @@ class RequestListState extends State<RequestList> {
                     controller: _scrollController,
                     itemCount: leaveRequests.length,
                     itemBuilder: (context, index) {
+                      var leaveRequest = leaveRequests[index];
+
+                      final bool isSlidable =
+                          leaveRequest.requestState == RequestState.pending ||
+                              leaveRequest.requestState == "";
+
                       return Slidable(
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                              label: 'Approved',
-                              onPressed: (BuildContext context) {},
-                            ),
-                            SlidableAction(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              label: 'Reject',
-                              onPressed: (BuildContext context) {},
-                            ),
-                          ],
-                        ),
-                        child: LeaveRequestCard(
-                            leaveRequest: leaveRequests[index]),
+                        endActionPane: isSlidable
+                            ? ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    backgroundColor: LightColors.kBlue,
+                                    foregroundColor: Colors.white,
+                                    label: 'Approved',
+                                    icon: Icons.check,
+                                    onPressed: (BuildContext context) async {
+                                      if (leaveRequest.id == null) return;
+
+                                      String? newRequestState =
+                                          await leaveRequestController
+                                              .approveLeaveRequest(
+                                        LeaveRequestChangeStatusInput(
+                                          id: leaveRequest.id!,
+                                          requestState: RequestState.approved,
+                                        ),
+                                      );
+                                      if (newRequestState != null) {
+                                        setState(() {
+                                          leaveRequest.requestState =
+                                              newRequestState;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  SlidableAction(
+                                    backgroundColor: LightColors.kRed,
+                                    foregroundColor: Colors.white,
+                                    label: 'Rejected',
+                                    icon: Icons.cancel,
+                                    onPressed: (BuildContext context) async {
+                                      if (leaveRequest.id == null) return;
+
+                                      String? newRequestState =
+                                          await leaveRequestController
+                                              .approveLeaveRequest(
+                                        LeaveRequestChangeStatusInput(
+                                          id: leaveRequest.id!,
+                                          requestState: RequestState.rejected,
+                                        ),
+                                      );
+                                      if (newRequestState != null) {
+                                        setState(() {
+                                          leaveRequest.requestState =
+                                              newRequestState;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )
+                            : null,
+                        child: LeaveRequestCard(leaveRequest: leaveRequest),
                       );
                     });
               }

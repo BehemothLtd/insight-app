@@ -46,8 +46,6 @@ class ProjectController extends GetxController {
 
     var result = await Project.fetchProjects(input.value, projectsQuery.value);
 
-    debugPrint('12421421421: $result');
-
     if (result != null) {
       var list = result['list'];
 

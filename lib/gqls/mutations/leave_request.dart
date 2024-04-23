@@ -21,3 +21,24 @@ const String leaveRequestCreateGQL = """
 }
 
 """;
+
+const String leaveRequestChangeStateGQL = """
+  mutation (\$id: ID!, \$requestState: String!) {
+    LeaveDayRequestStateChange(id: \$id, requestState: \$requestState) {
+      leaveDayRequest {
+        id
+        userId
+        approverId
+        from
+        to
+        timeOff
+        requestType
+        requestState
+        reason
+        createdAt
+        updatedAt
+        lockVersion
+      }
+    }
+  }
+""";

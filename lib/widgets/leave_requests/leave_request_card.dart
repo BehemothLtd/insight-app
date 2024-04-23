@@ -19,72 +19,92 @@ class LeaveRequestCard extends StatelessWidget {
     String imageUrl = leaveRequest.user?.avatarUrl ?? defaultNoImage();
 
     bool isNetworkUrl = checkNetworkUrl(imageUrl);
-    return Card(
-      child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-          leading: SizedBox(
-            width: 60,
-            height: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    if (leaveRequest.requestState != RequestState.pending)
-                      Container(
-                        width: 15,
-                        height: 15,
-                        color: Colors.transparent,
-                      )
-                    else
-                      const Icon(Icons.circle, color: Colors.blue, size: 15),
-                    const SizedBox(width: 5),
-                    CircleAvatar(
-                      backgroundImage: (isNetworkUrl
-                          ? NetworkImage(imageUrl)
-                          : AssetImage(imageUrl)) as ImageProvider<Object>,
+
+    return Column(
+      children: [
+        Card(
+          color: Colors.white, // Set the background color to white
+          margin: const EdgeInsets.all(0), // Remove the default margin
+          elevation: 0, // Remove shadow
+          shape: const RoundedRectangleBorder(
+            // Remove border radius
+            side: BorderSide.none,
+            borderRadius: BorderRadius.zero,
+          ),
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+            leading: SizedBox(
+              width: 60,
+              height: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      if (leaveRequest.requestState != RequestState.pending)
+                        Container(
+                          width: 15,
+                          height: 15,
+                          color: Colors.transparent,
+                        )
+                      else
+                        const Icon(Icons.circle, color: Colors.blue, size: 15),
+                      const SizedBox(width: 5),
+                      CircleAvatar(
+                        backgroundImage: (isNetworkUrl
+                            ? NetworkImage(imageUrl)
+                            : AssetImage(imageUrl)) as ImageProvider<Object>,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            title: Text(leaveRequest.user?.fullName ?? ""),
+            subtitle: Text(
+              leaveRequest.reason ?? "",
+              style: const TextStyle(color: Colors.black54),
+            ),
+            trailing: SizedBox(
+              width: 150,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (leaveRequest.requestState == RequestState.approved)
+                    const Icon(
+                      Icons.check_rounded,
+                      color: LightColors.kGreen,
+                    )
+                  else if (leaveRequest.requestState == RequestState.rejected)
+                    const Icon(
+                      Icons.cancel,
+                      color: LightColors.kRed,
+                    )
+                  else
+                    const SizedBox(
+                      width: 15,
+                      height: 15,
                     ),
-                  ],
-                )
-              ],
+                  const SizedBox(width: 7),
+                  Flex(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm')),
+                      Text(formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm')),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          title: Text(leaveRequest.user?.fullName ?? ""),
-          subtitle: Text(
-            leaveRequest.reason ?? "",
-            style: const TextStyle(color: Colors.black54),
-          ),
-          trailing: SizedBox(
-            width: 150,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (leaveRequest.requestState == RequestState.approved)
-                  const Icon(
-                    Icons.check_rounded,
-                    color: LightColors.kGreen,
-                  )
-                else if (leaveRequest.requestState == RequestState.rejected)
-                  const Icon(
-                    Icons.cancel,
-                    color: LightColors.kRed,
-                  )
-                else
-                  const SizedBox(width: 15, height: 15,),
-                const SizedBox(width: 7),
-                Flex(
-                  direction: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm')),
-                    Text(formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm')),
-                  ],
-                ),
-              ],
-            ),
-          )),
+        ),
+        Divider(height: 1, color: Colors.grey[300]), // Add a divider
+      ],
     );
+
+    
   }
 }
