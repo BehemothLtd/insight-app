@@ -36,12 +36,60 @@ class LeaveRequestController extends GetxController {
   var metadata = Rxn<Metadata>(null);
   var leaveRequestsQuery = Rxn<LeaveRequestsQuery>(LeaveRequestsQuery());
 
-  fetchLeaveRquest(bool isRefresh) async {
+  fetchLeaveRquests(bool isRefresh) async {
+    if (input.value != null && metadata.value != null) {
+      var maxPages = metadata.value?.pages ?? 10;
+      if (input.value!.page > maxPages) {
+        return Future.error('No more requests to load');
+      }
+    }
+
     var result = await LeaveRequest.fetchLeaveRequests(
         input.value, leaveRequestsQuery.value);
 
     if (result != null) {
-      leaveRquests.value = result["list"];
+      var list = result["list"];
+
+      Metadata metadata = result["metadata"];
+
+      setMetadata(metadata);
+      setInput(
+        PagyInput(
+          perPage: metadata.perPage ?? 1,
+          page: metadata.page ?? 10,
+        ),
+      );
+
+      if (isRefresh) {
+        leaveRquests.value = result["list"];
+      } else {
+        if (leaveRquests.value != null) {
+          leaveRquests.value = [...leaveRquests.value!, ...list];
+        } else {
+          leaveRquests.value = list;
+        }
+      }
     }
+  }
+
+  setInput(value) {
+    input.value = value;
+  }
+
+  setMetadata(value) {
+    metadata.value = value;
+  }
+
+  increasePage() {
+    input.value?.page = (input.value!.page + 1);
+  }
+
+  resetPagy() {
+    input.value = PagyInput(perPage: 10, page: 1);
+    metadata.value = null;
+  }
+
+  resetParams() {
+    leaveRequestsQuery.value = LeaveRequestsQuery();
   }
 }

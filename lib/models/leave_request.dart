@@ -78,10 +78,8 @@ class LeaveRequest {
     final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var variables = {
-      "input": {
-        "pagyInput": input?.toJson() ?? {},
-        "leaveDayRequestsQuery": leaveRequestsQuery?.toJson() ?? {},
-      }
+      'input': input?.toJson() ?? {},
+      'leaveDayRequestsQuery': leaveRequestsQuery?.toJson() ?? {},
     };
 
     var result = await apiProvider.request(query: query, variables: variables);
