@@ -32,3 +32,7 @@ List<String>? _convertToListOfString(dynamic value) {
   }
   return null;
 }
+
+bool checkNetworkUrl(String url) {
+  return url.startsWith('http://') || url.startsWith('https://');
+}

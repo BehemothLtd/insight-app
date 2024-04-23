@@ -4,6 +4,7 @@ import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/models/leave_requests_query.dart';
 import 'package:insight_app/models/metadata.dart';
 import 'package:insight_app/models/pagy_input.dart';
+import 'package:insight_app/models/user.dart';
 import 'package:insight_app/utils/api.dart';
 import 'package:insight_app/utils/time.dart';
 
@@ -17,6 +18,7 @@ class LeaveRequest {
   String? requestType;
   String? reason;
   String? requestState;
+  User? user;
 
   LeaveRequest({
     this.id,
@@ -28,19 +30,23 @@ class LeaveRequest {
     required this.requestType,
     required this.reason,
     this.requestState,
+    this.user,
   });
 
   factory LeaveRequest.fromJson(Map<String, dynamic> json) {
     return LeaveRequest(
       id: BigInt.parse(json['id']),
       userId: BigInt.parse(json['userId']),
-      approverId: json['approverId'] != null ? BigInt.parse(json['approverId']) : BigInt.zero,
+      approverId: json['approverId'] != null
+          ? BigInt.parse(json['approverId'])
+          : BigInt.zero,
       from: DateTime.tryParse(json['from']),
       to: DateTime.tryParse(json['to']),
       timeOff: json['timeOff'] is String ? double.parse(json['timeOff']) : 0.0,
       requestType: json['requestType'] ?? "",
       reason: json['reason'] ?? "",
       requestState: json['requestState'] ?? "",
+      user: json['User'] != null ? User.fromJson(json['User']) : null,
     );
   }
 

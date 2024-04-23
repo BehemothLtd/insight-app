@@ -1,3 +1,4 @@
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
@@ -57,21 +58,39 @@ class RequestListState extends State<RequestList> {
 
           if (leaveRequests == null || leaveRequests.isEmpty) {
             return const Center(
-              // child: Text("No Request"),
-            );
+                // child: Text("No Request"),
+                );
           } else {
             return ListView.builder(
-              itemCount: leaveRequests.length,
-              itemBuilder: (context, index) {
-                return LeaveRequestCard(leaveRequest: leaveRequests[index]);
-              },
-            );
+                itemCount: leaveRequests.length,
+                itemBuilder: (context, index) {
+                  return Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            label: 'Approved',
+                            onPressed: (BuildContext context) {},
+                          ),
+                          SlidableAction(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                            label: 'Reject',
+                            onPressed: (BuildContext context) {},
+                          ),
+                        ],
+                      ),
+                      child:
+                          LeaveRequestCard(leaveRequest: leaveRequests[index]));
+                });
           }
         }));
   }
 }
 
-/// The hove page which hosts the calendar
+/// The hove page which hosts the calendarr
 class Calendar extends StatefulWidget {
   /// Creates the home page to display teh calendar widget.
   const Calendar({super.key});

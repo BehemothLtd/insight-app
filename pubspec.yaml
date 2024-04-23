@@ -46,6 +46,7 @@ dependencies:
   http_parser: ^4.0.2
   path: ^1.9.0
   syncfusion_flutter_calendar: ^25.1.39
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:
