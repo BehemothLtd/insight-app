@@ -102,7 +102,7 @@ class LeaveRequest {
 
     var variables = {
       'input': input?.toJson() ?? {},
-      'leaveDayRequestsQuery': leaveRequestsQuery?.toJson() ?? {},
+      'query': leaveRequestsQuery?.toJson() ?? {},
     };
 
     var result = await apiProvider.request(query: query, variables: variables);
