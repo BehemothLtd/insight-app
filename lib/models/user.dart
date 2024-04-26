@@ -22,6 +22,7 @@ class User {
   String? slackId;
   String? about;
   String? state;
+  String? companyLevelId;
 
   User(
       {this.id,
@@ -37,7 +38,8 @@ class User {
       this.slackId,
       this.about,
       this.birthday,
-      this.state});
+      this.state,
+      this.companyLevelId});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -57,6 +59,7 @@ class User {
           ? formatDateFromDDMMYYYY(json['birthday'])
           : null,
       state: json["state"],
+      companyLevelId: json["companyLevelId"],
     );
   }
 
