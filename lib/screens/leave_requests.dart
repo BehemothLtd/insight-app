@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
 import 'package:insight_app/utils/helpers.dart';
 import 'package:insight_app/widgets/leave_requests/leave_request_card.dart';
+import 'package:insight_app/widgets/leave_requests/leave_requests_filter.dart';
 import 'package:insight_app/widgets/uis/datepicker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -27,6 +29,8 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
 
   PickerDateRange? selectedRange;
 
+  bool _isSearchPanelVisible = false;
+
   void _handleDateChange(PickerDateRange range) {
     leaveRequestController.resetPagy();
 
@@ -41,22 +45,76 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Leave Requests'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Datepicker(onDateChange: _handleDateChange),
+        appBar: AppBar(
+          title: const Text('Leave Requests'),
+          actions: [
+            IconButton(
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, anim) => RotationTransition(
+                  turns: child.key == const ValueKey('icon1')
+                      ? Tween<double>(begin: 1, end: 0.75).animate(anim)
+                      : Tween<double>(begin: 0.75, end: 1).animate(anim),
+                  child: FadeTransition(opacity: anim, child: child),
+                ),
+                child: _isSearchPanelVisible
+                    ? const Icon(Icons.search_off, key: ValueKey('icon1'))
+                    : const Icon(
+                        Icons.search,
+                        key: ValueKey('icon2'),
+                      ),
+              ),
+              onPressed: () {
+                setState(() {
+                  _isSearchPanelVisible = !_isSearchPanelVisible;
+                });
+              },
+            )
+          ],
+        ),
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Datepicker(onDateChange: _handleDateChange),
+                ),
+                const Expanded(
+                  flex: 6,
+                  child: RequestList(),
+                ),
+              ],
+            ),
+            _buildSearchPanel(),
+          ],
+        ));
+  }
+
+  void _handleSearch() {
+    setState(() {
+      _isSearchPanelVisible = false;
+    });
+
+    // Trigger the search logic
+    leaveRequestController.resetPagy();
+    leaveRequestController.fetchLeaveRquests(true);
+  }
+
+  Widget _buildSearchPanel() {
+    if (_isSearchPanelVisible) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Align(
+          alignment: Alignment.center,
+          child: LeaveRequestsFilter(
+            onSearch: _handleSearch,
           ),
-          const Expanded(
-            flex: 6,
-            child: RequestList(),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
 
@@ -136,16 +194,6 @@ class RequestListState extends State<RequestList> {
         duration: 1,
       );
     }
-  }
-
-  void _handleSearch() {
-    setState(() {
-      // _isSearchPanelVisible = false;
-    });
-
-    // Trigger the search logic
-    leaveRequestController.resetPagy();
-    leaveRequestController.fetchLeaveRquests(true);
   }
 
   @override
