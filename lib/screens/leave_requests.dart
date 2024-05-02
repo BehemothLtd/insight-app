@@ -27,8 +27,6 @@ class LeaveRequestsScreen extends StatefulWidget {
 class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   final leaveRequestController = Get.put(LeaveRequestController());
 
-  PickerDateRange? selectedRange;
-
   bool _isSearchPanelVisible = false;
 
   void _handleDateChange(PickerDateRange range) {
@@ -102,8 +100,12 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   }
 
   Widget _buildSearchPanel() {
-    if (_isSearchPanelVisible) {
-      return BackdropFilter(
+    return Visibility(
+      visible: _isSearchPanelVisible,
+      maintainState: true,
+      maintainAnimation: true,
+      maintainSize: true,
+      child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Align(
           alignment: Alignment.center,
@@ -111,10 +113,8 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
             onSearch: _handleSearch,
           ),
         ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
+      ),
+    );
   }
 }
 

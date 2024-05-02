@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insight_app/controllers/leave_request_controller.dart';
@@ -35,8 +37,6 @@ class _LeaveRequestsFilterState extends State<LeaveRequestsFilter> {
 
   @override
   Widget build(BuildContext context) {
-    // final GlobalKey<FormFieldState> _key;
-
     final leaveRequestController = Get.find<LeaveRequestController>();
 
     final List<Map<String, String?>> requestTypes = [
@@ -146,8 +146,9 @@ class _LeaveRequestsFilterState extends State<LeaveRequestsFilter> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            requestTypeDbKey.currentState?.reset();
-            requestStateDbKey.currentState?.reset();
+            // ignore: invalid_use_of_protected_member
+            requestTypeDbKey.currentState?.setValue(null);
+            requestStateDbKey.currentState?.setValue(null);
 
             leaveRequestController.resetParams();
 
