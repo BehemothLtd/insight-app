@@ -92,6 +92,25 @@ class User {
     return user;
   }
 
+  static fetchPermissions() async {
+    const query = gql.selfPermissionGQL;
+    final ApiProvider apiProvider = Get.find<ApiProvider>();
+
+    var result = await apiProvider.request(query: query, variables: {});
+
+    if (result != null) {
+      var permissionsJson = result['SelfPermission'];
+
+      var permissions = permissionsJson
+          .map<SelfPermission>((json) => SelfPermission.fromJson(json))
+          .toList();
+
+      return permissions;
+    } else {
+      return null;
+    }
+  }
+
   static signIn(String email, String password) async {
     const query = gql.signInGQL;
     final ApiProvider apiProvider = Get.find<ApiProvider>();
@@ -178,4 +197,20 @@ class SelfUpdateProfileInput {
         'gender': gender,
         'avatarKey': avatarKey,
       };
+}
+
+class SelfPermission {
+  BigInt? id;
+  String? action;
+  String? target;
+
+  SelfPermission({this.id, this.action, this.target});
+
+  factory SelfPermission.fromJson(Map<String, dynamic> json) {
+    return SelfPermission(
+      id: BigInt.parse(json['id']),
+      action: json['action'],
+      target: json['target'],
+    );
+  }
 }

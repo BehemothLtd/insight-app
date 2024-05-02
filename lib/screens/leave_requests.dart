@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:insight_app/controllers/leave_request_controller.dart';
+import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/leave_request.dart';
+import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
@@ -26,6 +28,7 @@ class LeaveRequestsScreen extends StatefulWidget {
 
 class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   final leaveRequestController = Get.put(LeaveRequestController());
+
   final GlobalKey<DatepickerState> datePickerKey = GlobalKey<DatepickerState>();
 
   bool _isSearchPanelVisible = false;
@@ -136,6 +139,8 @@ class RequestList extends StatefulWidget {
 
 class RequestListState extends State<RequestList> {
   final leaveRequestController = Get.put(LeaveRequestController());
+  final userController = Get.put(UserController());
+
   final ScrollController _scrollController = ScrollController();
 
   bool _showScrollToTopButton = false;
@@ -145,6 +150,8 @@ class RequestListState extends State<RequestList> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+
+    userController.fetchPermissions();
   }
 
   void _scrollListener() {
@@ -203,6 +210,25 @@ class RequestListState extends State<RequestList> {
         duration: 1,
       );
     }
+  }
+
+  bool _canChangeRequestState(
+      LeaveRequest leaveRequest, List<SelfPermission>? permissions) {
+    final bool isRequestChangeable =
+        leaveRequest.requestState == RequestState.pending ||
+            leaveRequest.requestState == "";
+
+    if (permissions!.isEmpty) {
+      return isRequestChangeable;
+    }
+
+    final bool hasPermission = permissions.any((permission) =>
+            (permission.target == "all" && permission.action == "all") ||
+            (permission.target == "leave_day_requests" &&
+                permission.action == "change_state")) ||
+        true;
+
+    return isRequestChangeable && hasPermission;
   }
 
   @override

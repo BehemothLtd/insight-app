@@ -101,3 +101,13 @@ const String usersListGQL = """
     }
   }
 """;
+
+const String selfPermissionGQL = """
+  query {
+    SelfPermission {
+      id
+      Target
+      Action
+    }
+  }
+""";
