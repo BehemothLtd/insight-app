@@ -8,9 +8,11 @@ class LeaveRequestsFilter extends StatefulWidget {
   const LeaveRequestsFilter({
     super.key,
     required this.onSearch,
+    required this.clear,
   });
 
   final VoidCallback onSearch;
+  final VoidCallback clear;
 
   @override
   State<LeaveRequestsFilter> createState() => _LeaveRequestsFilterState();
@@ -33,6 +35,17 @@ class _LeaveRequestsFilterState extends State<LeaveRequestsFilter> {
         text: leaveRequestController.leaveRequestsQuery.value?.requestTypeEq);
     requestStateController = TextEditingController(
         text: leaveRequestController.leaveRequestsQuery.value?.requestStateEq);
+  }
+
+  void _resetParams() {
+    requestTypeDbKey.currentState?.setValue(null);
+    requestStateDbKey.currentState?.setValue(null);
+
+    leaveRequestController.resetParams();
+
+    setState(() {});
+
+    widget.clear();
   }
 
   @override
@@ -145,15 +158,7 @@ class _LeaveRequestsFilterState extends State<LeaveRequestsFilter> {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () {
-            // ignore: invalid_use_of_protected_member
-            requestTypeDbKey.currentState?.setValue(null);
-            requestStateDbKey.currentState?.setValue(null);
-
-            leaveRequestController.resetParams();
-
-            setState(() {});
-          },
+          onPressed: () => _resetParams(),
           child: const Text(
             'Clear',
             style: TextStyle(

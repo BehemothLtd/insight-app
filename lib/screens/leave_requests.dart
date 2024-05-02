@@ -26,6 +26,7 @@ class LeaveRequestsScreen extends StatefulWidget {
 
 class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   final leaveRequestController = Get.put(LeaveRequestController());
+  final GlobalKey<DatepickerState> datePickerKey = GlobalKey<DatepickerState>();
 
   bool _isSearchPanelVisible = false;
 
@@ -76,7 +77,10 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
               children: [
                 Expanded(
                   flex: 4,
-                  child: Datepicker(onDateChange: _handleDateChange),
+                  child: Datepicker(
+                    onDateChange: _handleDateChange,
+                    key: datePickerKey,
+                  ),
                 ),
                 const Expanded(
                   flex: 6,
@@ -99,6 +103,10 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
     leaveRequestController.fetchLeaveRquests(true);
   }
 
+  void _handleClear() {
+    datePickerKey.currentState?.refreshRange();
+  }
+
   Widget _buildSearchPanel() {
     return Visibility(
       visible: _isSearchPanelVisible,
@@ -111,6 +119,7 @@ class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
           alignment: Alignment.center,
           child: LeaveRequestsFilter(
             onSearch: _handleSearch,
+            clear: _handleClear,
           ),
         ),
       ),
