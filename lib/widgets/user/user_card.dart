@@ -31,7 +31,7 @@ class UserCard extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildUserTypeIcon(user),
+                      _buildUserAvatarIcon(user),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -83,9 +83,8 @@ class UserCard extends StatelessWidget {
                               children: [
                                 _buildUserCompanyLevel(user),
                                 _buildUserRole(user),
-                                _buildUserPosition(user),
+                                // _buildUserPosition(user),
                               ]),
-                          Icon
                         ],
                       ),
                     ],
@@ -99,7 +98,7 @@ class UserCard extends StatelessWidget {
     );
   }
 
-  Widget _buildUserTypeIcon(User user) {
+  Widget _buildUserAvatarIcon(User user) {
     return CircleAvatar(
       backgroundColor: Colors.blue,
       radius: 35,
@@ -175,7 +174,7 @@ class UserCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.business, size: 16),
+            const Icon(Icons.check_circle, size: 16),
             const SizedBox(width: 4),
             Text(
               user.state!
