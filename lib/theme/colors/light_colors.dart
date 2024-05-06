@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LightColors  {
+class LightColors {
   static const Color kLightYellow = Color(0xFFFFF9EC);
   static const Color kLightYellow2 = Color(0xFFFFE4C7);
   static const Color kDarkYellow = Color(0xFFF9BE7C);
@@ -13,4 +13,9 @@ class LightColors  {
   static const Color kGreen = Color(0xFF309397);
 
   static const Color kDarkBlue = Color(0xFF0D253F);
+
+  static const Color lGreen = Color.fromARGB(255, 39, 171, 39);
+  static const Color lPurple = Color.fromARGB(255, 205, 123, 163);
+  static const Color lCyan = Color.fromARGB(255, 36, 172, 172);
+  static const Color lOrange = Color.fromARGB(255, 240, 156, 31);
 }
