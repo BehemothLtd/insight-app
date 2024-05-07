@@ -5,8 +5,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/controllers/leave_request_controller.dart';
-import 'package:insight_app/controllers/user_controller.dart';
 import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
@@ -139,7 +139,7 @@ class RequestList extends StatefulWidget {
 
 class RequestListState extends State<RequestList> {
   final leaveRequestController = Get.put(LeaveRequestController());
-  final userController = Get.put(UserController());
+  final authController = Get.put(AuthController());
 
   final ScrollController _scrollController = ScrollController();
 
@@ -150,8 +150,6 @@ class RequestListState extends State<RequestList> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-
-    userController.fetchPermissions();
   }
 
   void _scrollListener() {
@@ -249,6 +247,8 @@ class RequestListState extends State<RequestList> {
               color: Colors.transparent,
               child: Obx(() {
                 var leaveRequests = leaveRequestController.leaveRquests.value;
+                List<SelfPermission>? permissions =
+                    authController.selfPermissions.value;
 
                 if (leaveRequests == null || leaveRequests.isEmpty) {
                   return const Center(
@@ -261,14 +261,13 @@ class RequestListState extends State<RequestList> {
                       itemBuilder: (context, index) {
                         var leaveRequest = leaveRequests[index];
 
-                        final bool isSlidable =
-                            leaveRequest.requestState == RequestState.pending ||
-                                leaveRequest.requestState == "";
+                        final bool changeableRequestState =
+                            _canChangeRequestState(leaveRequest, permissions);
 
                         return Container(
                           padding: const EdgeInsets.symmetric(vertical: 6.0),
                           child: Slidable(
-                            endActionPane: isSlidable
+                            endActionPane: changeableRequestState
                                 ? ActionPane(
                                     motion: const ScrollMotion(),
                                     children: [

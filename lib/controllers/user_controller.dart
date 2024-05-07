@@ -14,7 +14,6 @@ class UserController extends GetxController {
   var input = Rxn<PagyInput>(PagyInput(page: 1, perPage: 10));
   var metadata = Rxn<Metadata>(null);
   var usersQuery = Rxn<UsersQuery>(UsersQuery());
-  var selfPermissions = Rxn<List<SelfPermission>>([SelfPermission()]);
 
   setCurrentUserProfile(User user) {
     userProfile.value = user;
@@ -32,9 +31,9 @@ class UserController extends GetxController {
     List<SelfPermission> permissions = await User.fetchPermissions();
 
     if (permissions.isNotEmpty) {
-      selfPermissions.value = permissions;
-
       return permissions;
+    } else {
+      return null;
     }
   }
 
