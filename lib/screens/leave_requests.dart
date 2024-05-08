@@ -214,102 +214,109 @@ class RequestListState extends State<RequestList> {
     });
 
     return RefreshIndicator(
-      child: Stack(
-        children: [
-          Container(
-            color: LightColors.kLightYellow,
-            child: Obx(() {
-              var leaveRequests = leaveRequestController.leaveRquests.value;
+      child: Card(
+        elevation: 0,
+        margin: const EdgeInsets.all(12),
+        child: Stack(
+          children: [
+            Container(
+              color: Colors.transparent,
+              child: Obx(() {
+                var leaveRequests = leaveRequestController.leaveRquests.value;
 
-              if (leaveRequests == null || leaveRequests.isEmpty) {
-                return const Center(
-                  child: Text("No LeaveRequest"),
-                );
-              } else {
-                return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: leaveRequests.length,
-                    itemBuilder: (context, index) {
-                      var leaveRequest = leaveRequests[index];
+                if (leaveRequests == null || leaveRequests.isEmpty) {
+                  return const Center(
+                    child: Text("No LeaveRequest"),
+                  );
+                } else {
+                  return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: leaveRequests.length,
+                      itemBuilder: (context, index) {
+                        var leaveRequest = leaveRequests[index];
 
-                      final bool isSlidable =
-                          leaveRequest.requestState == RequestState.pending ||
-                              leaveRequest.requestState == "";
+                        final bool isSlidable =
+                            leaveRequest.requestState == RequestState.pending ||
+                                leaveRequest.requestState == "";
 
-                      return Slidable(
-                        endActionPane: isSlidable
-                            ? ActionPane(
-                                motion: const ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    backgroundColor: LightColors.kBlue,
-                                    foregroundColor: Colors.white,
-                                    label: 'Approved',
-                                    icon: Icons.check,
-                                    onPressed: (BuildContext context) async {
-                                      if (leaveRequest.id == null) return;
+                        return Slidable(
+                          endActionPane: isSlidable
+                              ? ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      backgroundColor: LightColors.kBlue,
+                                      foregroundColor: Colors.white,
+                                      label: 'Approved',
+                                      icon: Icons.check,
+                                      onPressed: (BuildContext context) async {
+                                        if (leaveRequest.id == null) return;
 
-                                      String? newRequestState =
-                                          await leaveRequestController
-                                              .approveLeaveRequest(
-                                        LeaveRequestChangeStatusInput(
-                                          id: leaveRequest.id!,
-                                          requestState: RequestState.approved,
-                                        ),
-                                      );
-                                      if (newRequestState != null) {
-                                        setState(() {
-                                          leaveRequest.requestState =
-                                              newRequestState;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  SlidableAction(
-                                    backgroundColor: LightColors.kRed,
-                                    foregroundColor: Colors.white,
-                                    label: 'Rejected',
-                                    icon: Icons.cancel,
-                                    onPressed: (BuildContext context) async {
-                                      if (leaveRequest.id == null) return;
+                                        String? newRequestState =
+                                            await leaveRequestController
+                                                .approveLeaveRequest(
+                                          LeaveRequestChangeStatusInput(
+                                            id: leaveRequest.id!,
+                                            requestState: RequestState.approved,
+                                          ),
+                                        );
+                                        if (newRequestState != null) {
+                                          setState(() {
+                                            leaveRequest.requestState =
+                                                newRequestState;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    SlidableAction(
+                                      backgroundColor: LightColors.kRed,
+                                      foregroundColor: Colors.white,
+                                      label: 'Rejected',
+                                      icon: Icons.cancel,
+                                      onPressed: (BuildContext context) async {
+                                        if (leaveRequest.id == null) return;
 
-                                      String? newRequestState =
-                                          await leaveRequestController
-                                              .approveLeaveRequest(
-                                        LeaveRequestChangeStatusInput(
-                                          id: leaveRequest.id!,
-                                          requestState: RequestState.rejected,
-                                        ),
-                                      );
-                                      if (newRequestState != null) {
-                                        setState(() {
-                                          leaveRequest.requestState =
-                                              newRequestState;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ],
-                              )
-                            : null,
-                        child: LeaveRequestCard(leaveRequest: leaveRequest),
-                      );
-                    });
-              }
-            }),
-          ),
-          if (_showScrollToTopButton) ...[
-            Positioned(
-              right: 20.0,
-              bottom: 20.0,
-              child: FloatingActionButton(
-                backgroundColor: LightColors.kDarkYellow,
-                onPressed: _scrollToTop,
-                child: const Icon(Icons.arrow_upward),
-              ),
+                                        String? newRequestState =
+                                            await leaveRequestController
+                                                .approveLeaveRequest(
+                                          LeaveRequestChangeStatusInput(
+                                            id: leaveRequest.id!,
+                                            requestState: RequestState.rejected,
+                                          ),
+                                        );
+                                        if (newRequestState != null) {
+                                          setState(() {
+                                            leaveRequest.requestState =
+                                                newRequestState;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : null,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: LeaveRequestCard(leaveRequest: leaveRequest),
+                          ),
+                        );
+                      });
+                }
+              }),
             ),
+            if (_showScrollToTopButton) ...[
+              Positioned(
+                right: 20.0,
+                bottom: 20.0,
+                child: FloatingActionButton(
+                  backgroundColor: LightColors.kDarkYellow,
+                  onPressed: _scrollToTop,
+                  child: const Icon(Icons.arrow_upward),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
       onRefresh: () async {
         await leaveRequestController.resetPagy();

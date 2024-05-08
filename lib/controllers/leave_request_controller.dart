@@ -110,7 +110,8 @@ class LeaveRequestController extends GetxController {
   }
 
   resetParams() {
-    leaveRequestsQuery.value =
-        LeaveRequestsQuery(fromGtEq: startOfDay(DateTime.now()).toString());
+    var from = leaveRequestsQuery.value?.fromGtEq ?? "";
+    var to = leaveRequestsQuery.value?.toLtEq ?? "";
+    leaveRequestsQuery.value = LeaveRequestsQuery(fromGtEq: from, toLtEq: to);
   }
 }

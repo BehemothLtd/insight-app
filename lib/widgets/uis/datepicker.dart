@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/utils/helpers.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -59,58 +60,55 @@ class DatepickerState extends State<Datepicker> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SfDateRangePicker(
-            controller: _controller,
-            initialSelectedRange: _selectedRange,
-            view: DateRangePickerView.month,
-            selectionMode: DateRangePickerSelectionMode.range,
-            backgroundColor: Colors.white,
-            toggleDaySelection: true,
-            headerHeight: 55,
-            headerStyle: const DateRangePickerHeaderStyle(
-              textAlign: TextAlign.center,
-              backgroundColor: Colors.white,
-              textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(20),
             ),
-            monthViewSettings: const DateRangePickerMonthViewSettings(
-              viewHeaderStyle: DateRangePickerViewHeaderStyle(
-                textStyle: TextStyle(fontWeight: FontWeight.bold),
+            elevation: 4, // shadow
+            margin: const EdgeInsets.all(12),
+            child: SfDateRangePicker(
+              controller: _controller,
+              initialSelectedRange: _selectedRange,
+              view: DateRangePickerView.month,
+              selectionMode: DateRangePickerSelectionMode.range,
+              backgroundColor: LightColors.kPurple,
+              toggleDaySelection: true,
+              headerHeight: 55,
+              headerStyle: const DateRangePickerHeaderStyle(
+                textAlign: TextAlign.center,
+                backgroundColor: LightColors.kWhite,
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
-            ),
-            monthCellStyle: DateRangePickerMonthCellStyle(
-              textStyle: const TextStyle(
+              monthViewSettings: const DateRangePickerMonthViewSettings(
+                viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              monthCellStyle: DateRangePickerMonthCellStyle(
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                ),
+                cellDecoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              selectionTextStyle: const TextStyle(
                 color: Colors.black,
-              ),
-              todayTextStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.orange,
               ),
-              todayCellDecoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              cellDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10),
-              ),
+              selectionColor: Colors.orange,
+              rangeSelectionColor: Colors.orange.withOpacity(0.5),
+              startRangeSelectionColor: Colors.orange,
+              endRangeSelectionColor: Colors.orange,
+              showNavigationArrow: true,
+              onSelectionChanged: _onSelectionChanged,
             ),
-            selectionTextStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-            selectionColor: Colors.orange,
-            rangeSelectionColor: Colors.orange.withOpacity(0.5),
-            startRangeSelectionColor: Colors.orange,
-            endRangeSelectionColor: Colors.orange,
-            showNavigationArrow: true,
-            onSelectionChanged: (DateRangePickerSelectionChangedArgs args) =>
-                _onSelectionChanged(args),
           ),
-          Divider(height: 1, color: Colors.grey[300]),
         ],
       ),
     );

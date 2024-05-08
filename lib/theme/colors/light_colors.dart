@@ -15,4 +15,14 @@ class LightColors {
   static const Color kGreen = Color(0xFF309397);
 
   static const Color kDarkBlue = Color(0xFF0D253F);
+
+  static const Color kPurple = Color(0x00f1f4fa);
+
+  static const Color kGray = Color(0xcccccccc);
+
+  // Color pastel
+  static const Color kPastelPink = Color(0xfff8d7da);
+  static const Color kPastelYellow = Color(0xfffff3cd);
+  static const Color kPastelGreen = Color(0xffd4edda);
+  static const Color kPastelBlue = Color(0xffcce5ff);
 }
