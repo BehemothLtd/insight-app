@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:insight_app/gqls/index.dart' as gql;
 import 'package:insight_app/models/leave_requests_query.dart';
@@ -8,17 +7,16 @@ import 'package:insight_app/models/metadata.dart';
 import 'package:insight_app/models/pagy_input.dart';
 import 'package:insight_app/models/user.dart';
 import 'package:insight_app/utils/api.dart';
-import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/time.dart';
 
 class LeaveRequest {
   BigInt? id;
   BigInt? userId;
   BigInt? approverId;
-  DateTime? from;
-  DateTime? to;
-  double? timeOff;
-  String? requestType;
+  DateTime from;
+  DateTime to;
+  double timeOff;
+  String requestType;
   String? reason;
   String? requestState;
   User? user;
@@ -31,20 +29,20 @@ class LeaveRequest {
     required this.to,
     required this.timeOff,
     required this.requestType,
-    required this.reason,
+    this.reason,
     this.requestState,
     this.user,
   });
 
   factory LeaveRequest.fromJson(Map<String, dynamic> json) {
     return LeaveRequest(
-      id: BigInt.parse(json['id']),
-      userId: BigInt.parse(json['userId']),
+      id: json['id'] != null ? BigInt.parse(json['id']) : null,
+      userId: json['userId'] != null ? BigInt.parse(json['userId']) : null,
       approverId: json['approverId'] != null
           ? BigInt.parse(json['approverId'])
           : BigInt.zero,
-      from: DateTime.tryParse(json['from']),
-      to: DateTime.tryParse(json['to']),
+      from: DateTime.tryParse(json['from'] ?? '') ?? DateTime.now(),
+      to: DateTime.tryParse(json['to'] ?? '') ?? DateTime.now(),
       timeOff: json['timeOff'] is String ? double.parse(json['timeOff']) : 0.0,
       requestType: json['requestType'] ?? "",
       reason: json['reason'] ?? "",
@@ -82,8 +80,6 @@ class LeaveRequest {
 
     var variables = leaveRequestChangeStatusInput.toJson();
 
-    print("dsadsadas ${variables}");
-
     var result = await apiProvider.request(query: query, variables: variables);
 
     if (result != null) {
@@ -95,13 +91,13 @@ class LeaveRequest {
   }
 
   static fetchLeaveRequests(
-      PagyInput? input, LeaveRequestsQuery? leaveRequestsQuery) async {
+      PagyInput input, LeaveRequestsQuery? leaveRequestsQuery) async {
     const query = gql.leaveRequestsListGQL;
 
     final ApiProvider apiProvider = Get.find<ApiProvider>();
 
     var variables = {
-      'input': input?.toJson() ?? {},
+      'input': input.toJson(),
       'query': leaveRequestsQuery?.toJson() ?? {},
     };
 

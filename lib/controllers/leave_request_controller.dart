@@ -65,7 +65,8 @@ class LeaveRequestController extends GetxController {
     }
 
     var result = await LeaveRequest.fetchLeaveRequests(
-        input.value, leaveRequestsQuery.value);
+        input.value ?? PagyInput(page: 1, perPage: 10),
+        leaveRequestsQuery.value);
 
     if (result != null) {
       var list = result["list"];

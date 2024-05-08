@@ -13,8 +13,8 @@ class LeaveRequestCreate extends StatefulWidget {
 }
 
 class LeaveRequestCreateState extends State<LeaveRequestCreate> {
-  DateTime? from;
-  DateTime? to;
+  late DateTime from;
+  late DateTime to;
   double? timeOff;
   String? requestType;
   String? reason;
@@ -41,7 +41,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
 
   Future<void> _pickDate(BuildContext context,
       {required bool pickingFrom}) async {
-    final initialDate = pickingFrom ? from : to ?? DateTime.now();
+    final initialDate = pickingFrom ? from : to;
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -328,7 +328,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
       from: from,
       to: to,
       timeOff: timeOff ?? 0.0,
-      requestType: requestType,
+      requestType: requestType ?? "",
       reason: reason,
     );
 
