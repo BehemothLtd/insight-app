@@ -75,6 +75,18 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
         });
       }
     }
+
+    _calculateTimeOff();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime now = DateTime.now();
+    from = DateTime(now.year, now.month, now.day, 9, 00);
+    to = DateTime(now.year, now.month, now.day, 18, 30);
+
+    _calculateTimeOff();
   }
 
   @override
@@ -129,9 +141,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(from != null
-                                  ? '${from!.toLocal()}'.split(':00.000')[0]
-                                  : ''),
+                              Text('${from.toLocal()}'.split(':00.000')[0]),
                               Icon(
                                 Icons.calendar_today,
                                 color: Theme.of(context).primaryColor,
@@ -159,9 +169,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(to != null
-                                  ? '${to!.toLocal()}'.split(':00.000')[0]
-                                  : ''),
+                              Text('${to.toLocal()}'.split(':00.000')[0]),
                               Icon(
                                 Icons.calendar_today,
                                 color: Theme.of(context).primaryColor,
@@ -319,6 +327,31 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
         ),
       ),
     );
+  }
+
+  void _calculateTimeOff() {
+    if (from.day == to.day) {
+      double hours = to.difference(from).inMinutes / 60.0;
+
+      DateTime breakStart = DateTime(from.year, from.month, from.day, 12, 0);
+      DateTime breakEnd = DateTime(from.year, from.month, from.day, 13, 30);
+
+      if (from.isBefore(breakEnd) && to.isAfter(breakStart)) {
+        DateTime overlapStart = from.isBefore(breakStart) ? breakStart : from;
+        DateTime overlapEnd = to.isAfter(breakEnd) ? breakEnd : to;
+        double breakHours =
+            overlapEnd.difference(overlapStart).inMinutes / 60.0;
+        hours -= breakHours;
+      }
+
+      timeOff = hours;
+      _timeOffController.text = timeOff.toString();
+    } else {
+      int totalDays = to.difference(from).inDays + 1;
+
+      timeOff = totalDays * 8;
+      _timeOffController.text = timeOff.toString();
+    }
   }
 
   void _submitLeaveRequest() async {

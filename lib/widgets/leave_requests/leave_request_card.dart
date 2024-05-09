@@ -32,78 +32,82 @@ class LeaveRequestCard extends StatelessWidget {
 
     return Column(
       children: [
-        Card(
-          color: _backgroundCard(),
-          margin: const EdgeInsets.all(0),
-          elevation: 0, // Remove shadow
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 6.0),
+          child: Card(
+            color: _backgroundCard(),
+            margin: const EdgeInsets.all(0),
+            elevation: 0, // Remove shadow
 
-          child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-            leading: SizedBox(
-              width: 60,
-              height: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      if (leaveRequest.requestState != RequestState.pending)
-                        Container(
-                          width: 15,
-                          height: 15,
-                          color: Colors.transparent,
-                        )
-                      else
-                        const Icon(Icons.circle, color: Colors.blue, size: 15),
-                      const SizedBox(width: 5),
-                      CircleAvatar(
-                        backgroundImage: (isNetworkUrl
-                            ? NetworkImage(imageUrl)
-                            : AssetImage(imageUrl)) as ImageProvider<Object>,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            title: Text(
-              leaveRequest.user?.fullName ?? "",
-              style: const TextStyle(
-                  color: Colors.black87, fontWeight: FontWeight.w600),
-            ),
-            subtitle: Text(
-              leaveRequest.reason ?? "",
-              style: const TextStyle(color: Colors.black87),
-            ),
-            trailing: SizedBox(
-              width: 150,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7.0),
-                    child: Flex(
-                      direction: Axis.vertical,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+              leading: SizedBox(
+                width: 60,
+                height: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
                       children: [
-                        Text(
-                          formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm'),
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                        Text(
-                          formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm'),
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
+                        if (leaveRequest.requestState != RequestState.pending)
+                          Container(
+                            width: 15,
+                            height: 15,
+                            color: Colors.transparent,
+                          )
+                        else
+                          const Icon(Icons.circle,
+                              color: Colors.blue, size: 15),
+                        const SizedBox(width: 5),
+                        CircleAvatar(
+                          backgroundImage: (isNetworkUrl
+                              ? NetworkImage(imageUrl)
+                              : AssetImage(imageUrl)) as ImageProvider<Object>,
                         ),
                       ],
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
+              ),
+              title: Text(
+                leaveRequest.user?.fullName ?? "",
+                style: const TextStyle(
+                    color: Colors.black87, fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(
+                leaveRequest.reason ?? "",
+                style: const TextStyle(color: Colors.black87),
+              ),
+              trailing: SizedBox(
+                width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                      child: Flex(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm'),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm'),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

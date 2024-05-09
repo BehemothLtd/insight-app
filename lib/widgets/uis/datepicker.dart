@@ -72,12 +72,12 @@ class DatepickerState extends State<Datepicker> {
               initialSelectedRange: _selectedRange,
               view: DateRangePickerView.month,
               selectionMode: DateRangePickerSelectionMode.range,
-              backgroundColor: LightColors.kPurple,
+              backgroundColor: LightColors.kWhite,
               toggleDaySelection: true,
               headerHeight: 55,
               headerStyle: const DateRangePickerHeaderStyle(
                 textAlign: TextAlign.center,
-                backgroundColor: LightColors.kWhite,
+                backgroundColor: LightColors.kGray,
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

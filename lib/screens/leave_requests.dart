@@ -244,61 +244,84 @@ class RequestListState extends State<RequestList> {
                               ? ActionPane(
                                   motion: const ScrollMotion(),
                                   children: [
-                                    SlidableAction(
-                                      backgroundColor: LightColors.kBlue,
-                                      foregroundColor: Colors.white,
-                                      label: 'Approved',
-                                      icon: Icons.check,
-                                      onPressed: (BuildContext context) async {
-                                        if (leaveRequest.id == null) return;
+                                    Container(
+                                      width: 90,
+                                      margin: const EdgeInsets.only(
+                                          top: 6.0,
+                                          bottom: 6.0,
+                                          left: 6.0,
+                                          right: 2.0),
+                                      child: SlidableAction(
+                                        backgroundColor: LightColors.kBlue,
+                                        foregroundColor: Colors.white,
+                                        spacing: 0,
+                                        // label: 'Approved',
+                                        icon: Icons.check,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12),
+                                        ),
+                                        onPressed:
+                                            (BuildContext context) async {
+                                          if (leaveRequest.id == null) return;
 
-                                        String? newRequestState =
-                                            await leaveRequestController
-                                                .approveLeaveRequest(
-                                          LeaveRequestChangeStatusInput(
-                                            id: leaveRequest.id!,
-                                            requestState: RequestState.approved,
-                                          ),
-                                        );
-                                        if (newRequestState != null) {
-                                          setState(() {
-                                            leaveRequest.requestState =
-                                                newRequestState;
-                                          });
-                                        }
-                                      },
+                                          String? newRequestState =
+                                              await leaveRequestController
+                                                  .approveLeaveRequest(
+                                            LeaveRequestChangeStatusInput(
+                                              id: leaveRequest.id!,
+                                              requestState:
+                                                  RequestState.approved,
+                                            ),
+                                          );
+                                          if (newRequestState != null) {
+                                            setState(() {
+                                              leaveRequest.requestState =
+                                                  newRequestState;
+                                            });
+                                          }
+                                        },
+                                      ),
                                     ),
-                                    SlidableAction(
-                                      backgroundColor: LightColors.kRed,
-                                      foregroundColor: Colors.white,
-                                      label: 'Rejected',
-                                      icon: Icons.cancel,
-                                      onPressed: (BuildContext context) async {
-                                        if (leaveRequest.id == null) return;
+                                    Container(
+                                      width: 90,
+                                      margin: const EdgeInsets.only(
+                                          top: 6.0, bottom: 6.0, right: 6.0),
+                                      child: SlidableAction(
+                                        backgroundColor: LightColors.kRed,
+                                        foregroundColor: Colors.white,
+                                        // label: 'Rejected',
+                                        icon: Icons.cancel,
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(12),
+                                          bottomRight: Radius.circular(12),
+                                        ),
+                                        onPressed:
+                                            (BuildContext context) async {
+                                          if (leaveRequest.id == null) return;
 
-                                        String? newRequestState =
-                                            await leaveRequestController
-                                                .approveLeaveRequest(
-                                          LeaveRequestChangeStatusInput(
-                                            id: leaveRequest.id!,
-                                            requestState: RequestState.rejected,
-                                          ),
-                                        );
-                                        if (newRequestState != null) {
-                                          setState(() {
-                                            leaveRequest.requestState =
-                                                newRequestState;
-                                          });
-                                        }
-                                      },
+                                          String? newRequestState =
+                                              await leaveRequestController
+                                                  .approveLeaveRequest(
+                                            LeaveRequestChangeStatusInput(
+                                              id: leaveRequest.id!,
+                                              requestState:
+                                                  RequestState.rejected,
+                                            ),
+                                          );
+                                          if (newRequestState != null) {
+                                            setState(() {
+                                              leaveRequest.requestState =
+                                                  newRequestState;
+                                            });
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ],
                                 )
                               : null,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: LeaveRequestCard(leaveRequest: leaveRequest),
-                          ),
+                          child: LeaveRequestCard(leaveRequest: leaveRequest),
                         );
                       });
                 }
