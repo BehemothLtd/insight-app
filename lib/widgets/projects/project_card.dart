@@ -26,7 +26,7 @@ class ProjectCard extends StatelessWidget {
     List<User> uniqueUsers = uniqueUserMap.values.toList();
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
       child: Stack(
         clipBehavior: Clip.none,
         children: [

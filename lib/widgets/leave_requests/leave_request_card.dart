@@ -14,6 +14,16 @@ class LeaveRequestCard extends StatelessWidget {
     required this.leaveRequest,
   });
 
+  Color _backgroundCard() {
+    if (leaveRequest.requestState == RequestState.approved) {
+      return LightColors.kPastelGreen;
+    } else if (leaveRequest.requestState == RequestState.rejected) {
+      return LightColors.kPastelPink;
+    } else {
+      return LightColors.kPastelYellow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String imageUrl = leaveRequest.user?.avatarUrl ?? defaultNoImage();
@@ -22,89 +32,86 @@ class LeaveRequestCard extends StatelessWidget {
 
     return Column(
       children: [
-        Card(
-          color: Colors.white, // Set the background color to white
-          margin: const EdgeInsets.all(0), // Remove the default margin
-          elevation: 0, // Remove shadow
-          shape: const RoundedRectangleBorder(
-            // Remove border radius
-            side: BorderSide.none,
-            borderRadius: BorderRadius.zero,
-          ),
-          child: ListTile(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
-            leading: SizedBox(
-              width: 60,
-              height: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      if (leaveRequest.requestState != RequestState.pending)
-                        Container(
-                          width: 15,
-                          height: 15,
-                          color: Colors.transparent,
-                        )
-                      else
-                        const Icon(Icons.circle, color: Colors.blue, size: 15),
-                      const SizedBox(width: 5),
-                      CircleAvatar(
-                        backgroundImage: (isNetworkUrl
-                            ? NetworkImage(imageUrl)
-                            : AssetImage(imageUrl)) as ImageProvider<Object>,
-                      ),
-                    ],
-                  )
-                ],
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0),
+          child: Card(
+            color: _backgroundCard(),
+            margin: const EdgeInsets.all(0),
+            elevation: 0, // Remove shadow
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.all(0),
+              leading: SizedBox(
+                width: 60,
+                height: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        if (leaveRequest.requestState != RequestState.pending)
+                          Container(
+                            width: 15,
+                            height: 15,
+                            color: Colors.transparent,
+                          )
+                        else
+                          const Icon(Icons.circle,
+                              color: Colors.blue, size: 15),
+                        const SizedBox(width: 5),
+                        CircleAvatar(
+                          backgroundImage: (isNetworkUrl
+                              ? NetworkImage(imageUrl)
+                              : AssetImage(imageUrl)) as ImageProvider<Object>,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            title: Text(leaveRequest.user?.fullName ?? ""),
-            subtitle: Text(
-              leaveRequest.reason ?? "",
-              style: const TextStyle(color: Colors.black54),
-            ),
-            trailing: SizedBox(
-              width: 150,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (leaveRequest.requestState == RequestState.approved)
-                    const Icon(
-                      Icons.check_rounded,
-                      color: LightColors.kGreen,
+              title: Text(
+                leaveRequest.user?.fullName ?? "",
+                style: const TextStyle(
+                    color: Colors.black87, fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(
+                leaveRequest.reason ?? "",
+                style: const TextStyle(color: Colors.black87),
+              ),
+              trailing: SizedBox(
+                width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                      child: Flex(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm'),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm'),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
                     )
-                  else if (leaveRequest.requestState == RequestState.rejected)
-                    const Icon(
-                      Icons.cancel,
-                      color: LightColors.kRed,
-                    )
-                  else
-                    const SizedBox(
-                      width: 15,
-                      height: 15,
-                    ),
-                  const SizedBox(width: 7),
-                  Flex(
-                    direction: Axis.vertical,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(formatTime(leaveRequest.from, 'dd-MM-yyyy HH:mm')),
-                      Text(formatTime(leaveRequest.to, 'dd-MM-yyyy HH:mm')),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
-        Divider(height: 1, color: Colors.grey[300]), // Add a divider
       ],
     );
-
-    
   }
 }

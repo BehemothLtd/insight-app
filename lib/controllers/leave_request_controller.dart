@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +8,7 @@ import 'package:insight_app/models/leave_request.dart';
 import 'package:insight_app/models/leave_requests_query.dart';
 
 import 'package:insight_app/utils/custom_snackbar.dart';
+import 'package:insight_app/utils/helpers.dart';
 
 class LeaveRequestController extends GetxController {
   Future<bool> createNewRequest(LeaveRequest leaveRequest) async {
@@ -54,7 +51,9 @@ class LeaveRequestController extends GetxController {
   var leaveRquests = Rxn<List<LeaveRequest>>([]);
   var input = Rxn<PagyInput>(PagyInput(page: 1, perPage: 10));
   var metadata = Rxn<Metadata>(null);
-  var leaveRequestsQuery = Rxn<LeaveRequestsQuery>(LeaveRequestsQuery());
+  var leaveRequestsQuery = Rxn<LeaveRequestsQuery>(
+    LeaveRequestsQuery(fromGtEq: startOfDay(DateTime.now()).toString()),
+  );
 
   fetchLeaveRquests(bool isRefresh) async {
     if (input.value != null && metadata.value != null) {
@@ -111,6 +110,8 @@ class LeaveRequestController extends GetxController {
   }
 
   resetParams() {
-    leaveRequestsQuery.value = LeaveRequestsQuery();
+    var from = leaveRequestsQuery.value?.fromGtEq ?? "";
+    var to = leaveRequestsQuery.value?.toLtEq ?? "";
+    leaveRequestsQuery.value = LeaveRequestsQuery(fromGtEq: from, toLtEq: to);
   }
 }
