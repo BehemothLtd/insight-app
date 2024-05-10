@@ -15,7 +15,6 @@ class AuthController extends GetxController {
   // computed
   bool get signedIn => token.value != null;
 
-
   // =======COMMIT==========
   setToken(String? value) {
     token.value = value;
@@ -28,7 +27,6 @@ class AuthController extends GetxController {
   setSelfPermission(List<SelfPermission> permissions) {
     selfPermissions.value = permissions;
   }
-  
 
   // =======ACTIONS==========
   fetchSelfGeneralInfo() async {
