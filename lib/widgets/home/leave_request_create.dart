@@ -13,11 +13,11 @@ class LeaveRequestCreate extends StatefulWidget {
 }
 
 class LeaveRequestCreateState extends State<LeaveRequestCreate> {
-  DateTime? from;
-  DateTime? to;
+  late DateTime from;
+  late DateTime to;
   double? timeOff;
   String? requestType;
-  String? description;
+  String? reason;
 
   final TextEditingController _timeOffController = TextEditingController();
 
@@ -41,7 +41,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
 
   Future<void> _pickDate(BuildContext context,
       {required bool pickingFrom}) async {
-    final initialDate = pickingFrom ? from : to ?? DateTime.now();
+    final initialDate = pickingFrom ? from : to;
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -75,6 +75,18 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
         });
       }
     }
+
+    _calculateTimeOff();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime now = DateTime.now();
+    from = DateTime(now.year, now.month, now.day, 9, 00);
+    to = DateTime(now.year, now.month, now.day, 18, 30);
+
+    _calculateTimeOff();
   }
 
   @override
@@ -110,7 +122,9 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 15),
-              Row(
+              Flex(
+                direction: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
                     child: FormValidator(
@@ -127,9 +141,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(from != null
-                                  ? '${from!.toLocal()}'.split(':00.000')[0]
-                                  : ''),
+                              Text('${from.toLocal()}'.split(':00.000')[0]),
                               Icon(
                                 Icons.calendar_today,
                                 color: Theme.of(context).primaryColor,
@@ -157,9 +169,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(to != null
-                                  ? '${to!.toLocal()}'.split(':00.000')[0]
-                                  : ''),
+                              Text('${to.toLocal()}'.split(':00.000')[0]),
                               Icon(
                                 Icons.calendar_today,
                                 color: Theme.of(context).primaryColor,
@@ -173,6 +183,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                 ],
               ),
               const SizedBox(height: 15),
+
               FormValidator(
                 errorKey: "timeOff",
                 child: TextFormField(
@@ -226,10 +237,10 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
               ),
               const SizedBox(height: 15),
               FormValidator(
-                errorKey: "description",
+                errorKey: "reason",
                 child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Description',
+                    labelText: 'Reason',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 12.0,
@@ -239,7 +250,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                       fontSize: 13,
                     ),
                   ),
-                  value: description,
+                  value: reason,
                   items: descriptions
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -249,7 +260,7 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      description = newValue;
+                      reason = newValue;
                     });
                   },
                 ),
@@ -318,6 +329,31 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
     );
   }
 
+  void _calculateTimeOff() {
+    if (from.day == to.day) {
+      double hours = to.difference(from).inMinutes / 60.0;
+
+      DateTime breakStart = DateTime(from.year, from.month, from.day, 12, 0);
+      DateTime breakEnd = DateTime(from.year, from.month, from.day, 13, 30);
+
+      if (from.isBefore(breakEnd) && to.isAfter(breakStart)) {
+        DateTime overlapStart = from.isBefore(breakStart) ? breakStart : from;
+        DateTime overlapEnd = to.isAfter(breakEnd) ? breakEnd : to;
+        double breakHours =
+            overlapEnd.difference(overlapStart).inMinutes / 60.0;
+        hours -= breakHours;
+      }
+
+      timeOff = hours;
+      _timeOffController.text = timeOff.toString();
+    } else {
+      int totalDays = to.difference(from).inDays + 1;
+
+      timeOff = totalDays * 8;
+      _timeOffController.text = timeOff.toString();
+    }
+  }
+
   void _submitLeaveRequest() async {
     timeOff = double.tryParse(_timeOffController.text);
 
@@ -325,8 +361,8 @@ class LeaveRequestCreateState extends State<LeaveRequestCreate> {
       from: from,
       to: to,
       timeOff: timeOff ?? 0.0,
-      requestType: requestType,
-      description: description,
+      requestType: requestType ?? "",
+      reason: reason,
     );
 
     await leaveRequestController.createNewRequest(leaveRequest);
