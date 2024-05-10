@@ -239,23 +239,18 @@ class RequestListState extends State<RequestList> {
                             leaveRequest.requestState == RequestState.pending ||
                                 leaveRequest.requestState == "";
 
-                        return Slidable(
-                          endActionPane: isSlidable
-                              ? ActionPane(
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    Container(
-                                      width: 90,
-                                      margin: const EdgeInsets.only(
-                                          top: 6.0,
-                                          bottom: 6.0,
-                                          left: 6.0,
-                                          right: 2.0),
-                                      child: SlidableAction(
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                          child: Slidable(
+                            endActionPane: isSlidable
+                                ? ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
                                         backgroundColor: LightColors.kBlue,
                                         foregroundColor: Colors.white,
                                         spacing: 0,
-                                        // label: 'Approved',
+                                        label: 'Approved',
                                         icon: Icons.check,
                                         borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(12),
@@ -282,15 +277,13 @@ class RequestListState extends State<RequestList> {
                                           }
                                         },
                                       ),
-                                    ),
-                                    Container(
-                                      width: 90,
-                                      margin: const EdgeInsets.only(
-                                          top: 6.0, bottom: 6.0, right: 6.0),
-                                      child: SlidableAction(
+                                      const SizedBox(
+                                        width: 3.0,
+                                      ),
+                                      SlidableAction(
                                         backgroundColor: LightColors.kRed,
                                         foregroundColor: Colors.white,
-                                        // label: 'Rejected',
+                                        label: 'Rejected',
                                         icon: Icons.cancel,
                                         borderRadius: const BorderRadius.only(
                                           topRight: Radius.circular(12),
@@ -317,11 +310,11 @@ class RequestListState extends State<RequestList> {
                                           }
                                         },
                                       ),
-                                    ),
-                                  ],
-                                )
-                              : null,
-                          child: LeaveRequestCard(leaveRequest: leaveRequest),
+                                    ],
+                                  )
+                                : null,
+                            child: LeaveRequestCard(leaveRequest: leaveRequest),
+                          ),
                         );
                       });
                 }

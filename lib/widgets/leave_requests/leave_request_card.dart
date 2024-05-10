@@ -33,15 +33,14 @@ class LeaveRequestCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.symmetric(vertical: 6.0),
+          padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0),
           child: Card(
             color: _backgroundCard(),
             margin: const EdgeInsets.all(0),
             elevation: 0, // Remove shadow
-
             child: ListTile(
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 3.0, vertical: 2.0),
+                  const EdgeInsets.all(0),
               leading: SizedBox(
                 width: 60,
                 height: double.infinity,
