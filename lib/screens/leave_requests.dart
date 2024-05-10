@@ -5,8 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
+import 'package:insight_app/controllers/auth_controller.dart';
 import 'package:insight_app/controllers/leave_request_controller.dart';
 import 'package:insight_app/models/leave_request.dart';
+import 'package:insight_app/models/user.dart';
 import 'package:insight_app/theme/colors/light_colors.dart';
 import 'package:insight_app/utils/constants/leave_request.dart';
 import 'package:insight_app/utils/custom_snackbar.dart';
@@ -26,6 +28,7 @@ class LeaveRequestsScreen extends StatefulWidget {
 
 class LeaveRequestsScreenState extends State<LeaveRequestsScreen> {
   final leaveRequestController = Get.put(LeaveRequestController());
+
   final GlobalKey<DatepickerState> datePickerKey = GlobalKey<DatepickerState>();
 
   bool _isSearchPanelVisible = false;
@@ -136,6 +139,8 @@ class RequestList extends StatefulWidget {
 
 class RequestListState extends State<RequestList> {
   final leaveRequestController = Get.put(LeaveRequestController());
+  final authController = Get.put(AuthController());
+
   final ScrollController _scrollController = ScrollController();
 
   bool _showScrollToTopButton = false;
@@ -205,6 +210,25 @@ class RequestListState extends State<RequestList> {
     }
   }
 
+  bool _canChangeRequestState(
+      LeaveRequest leaveRequest, List<SelfPermission>? permissions) {
+    final bool isRequestChangeable =
+        leaveRequest.requestState == RequestState.pending ||
+            leaveRequest.requestState == "";
+
+    if (permissions!.isEmpty) {
+      return isRequestChangeable;
+    }
+
+    final bool hasPermission = permissions.any((permission) =>
+            (permission.target == "all" && permission.action == "all") ||
+            (permission.target == "leave_day_requests" &&
+                permission.action == "change_state")) ||
+        true;
+
+    return isRequestChangeable && hasPermission;
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -223,6 +247,8 @@ class RequestListState extends State<RequestList> {
               color: Colors.transparent,
               child: Obx(() {
                 var leaveRequests = leaveRequestController.leaveRquests.value;
+                List<SelfPermission>? permissions =
+                    authController.selfPermissions.value;
 
                 if (leaveRequests == null || leaveRequests.isEmpty) {
                   return const Center(
@@ -235,14 +261,13 @@ class RequestListState extends State<RequestList> {
                       itemBuilder: (context, index) {
                         var leaveRequest = leaveRequests[index];
 
-                        final bool isSlidable =
-                            leaveRequest.requestState == RequestState.pending ||
-                                leaveRequest.requestState == "";
+                        final bool changeableRequestState =
+                            _canChangeRequestState(leaveRequest, permissions);
 
                         return Container(
                           padding: const EdgeInsets.symmetric(vertical: 6.0),
                           child: Slidable(
-                            endActionPane: isSlidable
+                            endActionPane: changeableRequestState
                                 ? ActionPane(
                                     motion: const ScrollMotion(),
                                     children: [
@@ -250,7 +275,6 @@ class RequestListState extends State<RequestList> {
                                         backgroundColor: LightColors.kBlue,
                                         foregroundColor: Colors.white,
                                         spacing: 0,
-                                        label: 'Approved',
                                         icon: Icons.check,
                                         borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(12),
@@ -283,7 +307,6 @@ class RequestListState extends State<RequestList> {
                                       SlidableAction(
                                         backgroundColor: LightColors.kRed,
                                         foregroundColor: Colors.white,
-                                        label: 'Rejected',
                                         icon: Icons.cancel,
                                         borderRadius: const BorderRadius.only(
                                           topRight: Radius.circular(12),

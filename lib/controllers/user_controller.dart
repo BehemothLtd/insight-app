@@ -27,6 +27,16 @@ class UserController extends GetxController {
     }
   }
 
+  fetchPermissions() async {
+    List<SelfPermission> permissions = await User.fetchPermissions();
+
+    if (permissions.isNotEmpty) {
+      return permissions;
+    } else {
+      return null;
+    }
+  }
+
   Future<bool> updateProfile(SelfUpdateProfileInput input) async {
     User? user = await User.updateProfile(input);
 
