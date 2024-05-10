@@ -275,7 +275,6 @@ class RequestListState extends State<RequestList> {
                                         backgroundColor: LightColors.kBlue,
                                         foregroundColor: Colors.white,
                                         spacing: 0,
-                                        label: 'Approved',
                                         icon: Icons.check,
                                         borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(12),
@@ -308,7 +307,6 @@ class RequestListState extends State<RequestList> {
                                       SlidableAction(
                                         backgroundColor: LightColors.kRed,
                                         foregroundColor: Colors.white,
-                                        label: 'Rejected',
                                         icon: Icons.cancel,
                                         borderRadius: const BorderRadius.only(
                                           topRight: Radius.circular(12),

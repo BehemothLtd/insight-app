@@ -38,9 +38,8 @@ class LeaveRequest {
     return LeaveRequest(
       id: json['id'] != null ? BigInt.parse(json['id']) : null,
       userId: json['userId'] != null ? BigInt.parse(json['userId']) : null,
-      approverId: json['approverId'] != null
-          ? BigInt.parse(json['approverId'])
-          : BigInt.zero,
+      approverId:
+          json['approverId'] != null ? BigInt.parse(json['approverId']) : null,
       from: DateTime.tryParse(json['from'] ?? '') ?? DateTime.now(),
       to: DateTime.tryParse(json['to'] ?? '') ?? DateTime.now(),
       timeOff: json['timeOff'] is String ? double.parse(json['timeOff']) : 0.0,
@@ -61,7 +60,7 @@ class LeaveRequest {
         "from": formatTime(from, 'dd-MM-yyyy HH:mm'),
         "to": formatTime(to, 'dd-MM-yyyy HH:mm'),
         "timeOff": timeOff,
-        "requestType": requestType ?? "",
+        "requestType": requestType,
         "reason": reason ?? "",
       }
     };
